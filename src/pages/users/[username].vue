@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { profileQuery } from '@/utils/supaQuerys'
+import { profileQuery, updateProfileQuery } from '@/utils/supaQuerys'
 import type { Tables } from 'database/types'
 
 const { username } = useRoute('/users/[username]').params
 const profile = ref<Tables<'profiles'> | null>(null)
+const authStore = useAuthStore()
+const isOwnProfile = computed(() => !!profile.value && authStore.profile?.id === profile.value.id)
 
 const getTasks = async () => {
   const { data, error, status } = await profileQuery({
@@ -15,6 +17,42 @@ const getTasks = async () => {
 }
 
 await getTasks()
+
+const editOpen = ref(false)
+const editError = ref('')
+const editForm = ref({ username: '', full_name: '', bio: '' })
+
+const openEdit = () => {
+  if (!profile.value) return
+  editForm.value = {
+    username: profile.value.username,
+    full_name: profile.value.full_name,
+    bio: profile.value.bio ?? '',
+  }
+  editError.value = ''
+  editOpen.value = true
+}
+
+const submitEdit = async () => {
+  if (!profile.value) return
+  editError.value = ''
+
+  const { data, error } = await updateProfileQuery(profile.value.id, {
+    username: editForm.value.username.trim(),
+    full_name: editForm.value.full_name.trim(),
+    bio: editForm.value.bio.trim() || null,
+  })
+
+  if (error) {
+    editError.value =
+      error.code === '23505' ? '이미 사용 중인 사용자명입니다.' : '수정에 실패했습니다.'
+    return
+  }
+
+  profile.value = data
+  if (authStore.profile?.id === data.id) authStore.profile = data
+  editOpen.value = false
+}
 </script>
 
 <template>
@@ -27,8 +65,36 @@ await getTasks()
 
       <p class="mt-2 text-gray-500">@{{ profile?.username }}</p>
       <h1 class="mt-5 text-4xl font-bold">{{ profile?.full_name }}</h1>
-      <p class="mt-2 text-sm">{{ profile?.bio || 'No bio available' }}</p>
+      <p class="mt-2 text-sm">{{ profile?.bio || '' }}</p>
     </div>
-    <Button>프로필 수정</Button>
+    <Button v-if="isOwnProfile" @click="openEdit">프로필 수정</Button>
+
+    <Dialog v-model:open="editOpen">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>프로필 수정</DialogTitle>
+        </DialogHeader>
+        <form class="flex flex-col gap-4 text-left" @submit.prevent="submitEdit">
+          <div class="grid gap-2">
+            <Label>사용자명</Label>
+            <Input v-model="editForm.username" required />
+          </div>
+          <div class="grid gap-2">
+            <Label>이름</Label>
+            <Input v-model="editForm.full_name" required />
+          </div>
+          <div class="grid gap-2">
+            <Label>소개글</Label>
+            <Input v-model="editForm.bio" />
+          </div>
+          <ul class="text-sm text-left text-red-500" v-if="editError">
+            <li class="list-disc">{{ editError }}</li>
+          </ul>
+          <DialogFooter>
+            <Button type="submit">저장</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>

@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import type { CreateNewTest } from '@/types/CreateNewForm'
 import type { QueryData } from '@supabase/supabase-js'
-import type { TablesInsert } from 'database/types'
+import type { TablesInsert, TablesUpdate } from 'database/types'
 
 export const yesangQuery = (id: number) =>
   supabase.from('yesang_tests').select('*').eq('id', id).single()
@@ -32,6 +32,11 @@ export const updateYesangQuery = (updateYesang = {}, id: number) => {
 export const profileQuery = ({ column, value }: { column: string; value: string }) => {
   return supabase.from('profiles').select('*').eq(column, value).single()
 }
+
+export const updateProfileQuery = (
+  id: string,
+  updates: Pick<TablesUpdate<'profiles'>, 'username' | 'full_name' | 'bio'>,
+) => supabase.from('profiles').update(updates).eq('id', id).select().single()
 
 export const upsertTestResultQuery = (result: TablesInsert<'test_results'>) => {
   return supabase.from('test_results').upsert(result, { onConflict: 'username,round' })
