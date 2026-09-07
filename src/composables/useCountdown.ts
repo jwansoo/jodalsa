@@ -2,16 +2,24 @@ export function useCountdown(onExpire: () => void) {
   const remainingSeconds = ref(0)
   const isRunning = ref(false)
   let intervalId: ReturnType<typeof setInterval> | undefined
+  // Deadline-based rather than decrement-per-tick, so a throttled/backgrounded
+  // tab's delayed setInterval firings still resolve to the correct elapsed time
+  // instead of granting extra time during an exam period.
+  let deadline = 0
+
+  const update = () => {
+    const secondsLeft = Math.ceil((deadline - Date.now()) / 1000)
+    if (secondsLeft <= 0) {
+      remainingSeconds.value = 0
+      stop()
+      onExpire()
+    } else {
+      remainingSeconds.value = secondsLeft
+    }
+  }
 
   const tick = () => {
-    intervalId = setInterval(() => {
-      remainingSeconds.value -= 1
-      if (remainingSeconds.value <= 0) {
-        remainingSeconds.value = 0
-        stop()
-        onExpire()
-      }
-    }, 1000)
+    intervalId = setInterval(update, 1000)
   }
 
   const stop = () => {
@@ -24,6 +32,7 @@ export function useCountdown(onExpire: () => void) {
 
   const start = (durationSeconds: number) => {
     stop()
+    deadline = Date.now() + durationSeconds * 1000
     remainingSeconds.value = durationSeconds
     isRunning.value = true
     tick()
@@ -31,6 +40,7 @@ export function useCountdown(onExpire: () => void) {
 
   const resume = () => {
     if (isRunning.value || remainingSeconds.value <= 0) return
+    deadline = Date.now() + remainingSeconds.value * 1000
     isRunning.value = true
     tick()
   }

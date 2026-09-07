@@ -87,13 +87,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/realworld/': RouteRecordInfo<
-      '/realworld/',
-      '/realworld',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/register': RouteRecordInfo<
       '/register',
       '/register',
@@ -120,13 +113,6 @@ declare module 'vue-router/auto-routes' {
       '/tests',
       Record<never, never>,
       Record<never, never>,
-      | never
-    >,
-    '/tests/[id]': RouteRecordInfo<
-      '/tests/[id]',
-      '/tests/:id',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
       | never
     >,
     '/users/[username]': RouteRecordInfo<
@@ -213,14 +199,6 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/pages/realworld/index.vue': {
-      routes:
-        | '/realworld/'
-      views:
-        | never
-      pathParamNames:
-        | never
-    }
     'src/pages/register.vue': {
       routes:
         | '/register'
@@ -252,14 +230,6 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | never
-    }
-    'src/pages/tests/[id].vue': {
-      routes:
-        | '/tests/[id]'
-      views:
-        | never
-      pathParamNames:
-        | 'id'
     }
     'src/pages/users/[username].vue': {
       routes:

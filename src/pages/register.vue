@@ -11,11 +11,23 @@ const formData = ref({
   confirmPassword: '',
 })
 const router = useRouter()
+const registerError = ref('')
 
 const signup = async () => {
-  const isRegistered = await register(formData.value)
+  registerError.value = ''
+  const { error } = await register(formData.value)
 
-  if (isRegistered) router.push('/')
+  if (!error) {
+    router.push('/')
+    return
+  }
+
+  registerError.value =
+    'code' in error && error.code === '23505'
+      ? '이미 사용 중인 사용자명입니다.'
+      : error.message === 'User already registered'
+        ? '이미 가입된 이메일입니다.'
+        : '가입에 실패했습니다. 잠시 후 다시 시도해주세요.'
 }
 </script>
 
@@ -111,6 +123,9 @@ const signup = async () => {
               v-model="formData.confirmPassword"
             />
           </div>
+          <ul class="text-sm text-left text-red-500" v-if="registerError">
+            <li class="list-disc">{{ registerError }}</li>
+          </ul>
           <Button type="submit" class="w-full"> 사용자 등록 </Button>
           <!-- <Button variant="outline" class="w-full"> Login with Google </Button> -->
         </form>

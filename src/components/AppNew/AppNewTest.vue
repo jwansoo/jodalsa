@@ -4,21 +4,26 @@ import { createNewYesangsQuery, yesangsCountQuery } from '@/utils/supaQuerys'
 import type { CreateNewTest } from '@/types/CreateNewForm'
 const sheetOpen = defineModel<boolean>()
 
+const isSubmitting = ref(false)
 const createTest = async (yesang: CreateNewTest) => {
-  const { count } = await yesangsCountQuery
-  const { error } = await createNewYesangsQuery((count ?? 0) + 1, yesang)
-  if (error) {
-    useErrorStore().setError({ error })
-  } else {
-    sheetOpen.value = false
+  if (isSubmitting.value) return
+  isSubmitting.value = true
+  try {
+    const { count } = await yesangsCountQuery
+    const { error } = await createNewYesangsQuery((count ?? 0) + 1, yesang)
+    if (error) {
+      useErrorStore().setError({ error })
+    } else {
+      sheetOpen.value = false
+    }
+  } finally {
+    isSubmitting.value = false
   }
 }
 
 const testsLoader = useJodalsaStore()
-const { yesangs } = storeToRefs(testsLoader)
 const { getTests } = testsLoader
 getTests()
-console.log(yesangs)
 
 const items = ref([
   {
@@ -61,7 +66,7 @@ const fieldClasses = {
       <DialogHeader>
         <DialogTitle>Create New Test</DialogTitle>
       </DialogHeader>
-      <FormKit type="form" @submit="createTest" submit-lanel="Create Task">
+      <FormKit type="form" @submit="createTest" submit-label="Create Task">
         <FormKit
           type="select"
           name="subject"

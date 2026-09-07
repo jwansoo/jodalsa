@@ -62,7 +62,7 @@ export const inquiryMessagesQuery = (threadId: string) =>
 export type InquiryMessages = QueryData<ReturnType<typeof inquiryMessagesQuery>>
 
 export const createInquiryMessageQuery = (message: TablesInsert<'inquiry_messages'>) =>
-  supabase.from('inquiry_messages').insert(message)
+  supabase.from('inquiry_messages').insert(message).select().single()
 
 export const courseMaterialSignedUrlQuery = (bucket: string, path: string) =>
   supabase.storage.from(bucket).createSignedUrl(path, 60)

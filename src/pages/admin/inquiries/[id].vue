@@ -38,7 +38,9 @@ const channel = supabase
       filter: `thread_id=eq.${id}`,
     },
     (payload) => {
-      messages.value.push(payload.new as Tables<'inquiry_messages'>)
+      const incoming = payload.new as Tables<'inquiry_messages'>
+      if (messages.value.some((message) => message.id === incoming.id)) return
+      messages.value.push(incoming)
     },
   )
   .subscribe()
@@ -50,12 +52,13 @@ const sendReply = async () => {
   if (!message) return
 
   reply.value = ''
-  const { error } = await createInquiryMessageQuery({
+  const { data: messageRow, error } = await createInquiryMessageQuery({
     thread_id: id,
     sender: 'admin',
     message,
   })
   if (error) useErrorStore().setError({ error })
+  else if (!messages.value.some((m) => m.id === messageRow.id)) messages.value.push(messageRow)
 }
 
 useMeta({
