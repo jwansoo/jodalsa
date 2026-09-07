@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { marked } from 'marked'
-import userGuideMarkdown from '../../../docs/user-guide.md?raw'
+import userGuideMarkdown from '../../docs/user-guide.md?raw'
 
 usePageStore().pageData.title = '사용설명서'
 

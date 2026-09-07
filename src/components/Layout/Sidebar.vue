@@ -44,13 +44,11 @@ const mainLinks = computed(() => [
     : []),
   { title: '모의고사', to: '/tests', icon: 'lucide:building-2' },
   { title: '수험교재', to: '/materials', icon: 'lucide:badge-check' },
+  { title: '사용설명서', to: '/manual', icon: 'lucide:book-open' },
 ])
 const adminLinks = computed(() =>
   profile.value?.is_admin
-    ? [
-        { title: '문의관리', to: '/admin/inquiries', icon: 'lucide:inbox' },
-        { title: '사용설명서', to: '/admin/manual', icon: 'lucide:book-open' },
-      ]
+    ? [{ title: '문의관리', to: '/admin/inquiries', icon: 'lucide:inbox' }]
     : [],
 )
 const router = useRouter()

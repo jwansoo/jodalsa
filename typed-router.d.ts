@@ -59,13 +59,6 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
-    '/admin/manual': RouteRecordInfo<
-      '/admin/manual',
-      '/admin/manual',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
     '/jodalsa/': RouteRecordInfo<
       '/jodalsa/',
       '/jodalsa',
@@ -83,6 +76,13 @@ declare module 'vue-router/auto-routes' {
     '/login': RouteRecordInfo<
       '/login',
       '/login',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/manual': RouteRecordInfo<
+      '/manual',
+      '/manual',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -174,14 +174,6 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | 'id'
     }
-    'src/pages/admin/manual.vue': {
-      routes:
-        | '/admin/manual'
-      views:
-        | never
-      pathParamNames:
-        | never
-    }
     'src/pages/jodalsa/index.vue': {
       routes:
         | '/jodalsa/'
@@ -201,6 +193,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/login.vue': {
       routes:
         | '/login'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/manual.vue': {
+      routes:
+        | '/manual'
       views:
         | never
       pathParamNames:
