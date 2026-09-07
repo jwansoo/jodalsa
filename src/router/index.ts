@@ -20,7 +20,10 @@ router.beforeEach(async (to, _from) => {
       name: '/',
     }
   }
-  if (to.path.startsWith('/admin') && !authStore.profile?.is_admin) {
+  if (
+    (to.path.startsWith('/admin') || to.path.startsWith('/jodalsa')) &&
+    !authStore.profile?.is_admin
+  ) {
     return {
       name: '/',
     }

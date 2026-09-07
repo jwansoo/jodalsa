@@ -15,7 +15,9 @@
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem @click="$emit('testClicked')">Test</DropdownMenuItem>
+          <DropdownMenuItem :disabled="!profile?.is_admin" @click="$emit('testClicked')">
+            Test
+          </DropdownMenuItem>
           <DropdownMenuItem>Project</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -38,7 +40,9 @@ import { useWindowSize } from '@vueuse/core'
 const { profile } = storeToRefs(useAuthStore())
 const mainLinks = computed(() => [
   { title: '홈', to: '/', icon: 'lucide:house' },
-  { title: '문제모음', to: '/jodalsa', icon: 'lucide:building' },
+  ...(profile.value?.is_admin
+    ? [{ title: '문제모음', to: '/jodalsa', icon: 'lucide:building' }]
+    : []),
   { title: '모의고사', to: '/tests', icon: 'lucide:building-2' },
   { title: '수험교재', to: '/materials', icon: 'lucide:badge-check' },
 ])
