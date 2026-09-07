@@ -1,12 +1,25 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "./typed-router.d.ts",
+    "database/types.ts",
+    "auto-imports.d.ts",
+    "components.d.ts",
+    "formkit.config.ts",
+    "formkit.theme.ts"
+  ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     // Extra safety for array and object lookups, but may have false positives.
     "noUncheckedIndexedAccess": true,
-
+    "moduleResolution": "Bundler",
+    // Explicitly silence the TypeScript 6 deprecation warning for `baseUrl`.
+    "ignoreDeprecations": "6.0",
     // Path mapping for cleaner imports.
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },

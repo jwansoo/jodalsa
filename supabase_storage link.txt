@@ -1,0 +1,23 @@
+Ⅰ. 공공조달과 법제도 이해  jodal_subject_1  subtitle_1 suntitle_2 subtitle_3 subtitle_4 subtitle_5 subtitle_6
+
+ 1. 공공조달 개요
+ 2. 공공조달 원칙 및 방법
+ 3. 전자조달시스템
+ 4. 전략적 공공조달
+ 5. 공공조달법률 이해
+ 6. 공공조달 관리
+
+Ⅱ. 공공조달 계획수립 및 분석 jodal_subject_2 subtitle_1 subtitle_2 subtitle_3
+
+ 1. 공공조달계획
+ 2. 조달요구 응대 및 제안
+ 3. 입찰·제안평가 및 계약체결
+
+Ⅲ. 공공계약관리 jodal_subject_3 subtitle_1 subtitle_2 subtitle_3 subtitle_4 subtitle_5
+
+ 1. 계약관리 일반 절차
+ 2. 물품 계약관리
+ 3. 용역·다수공급자 계약관리
+ 4. 공사계약관리
+5. 공공조달 품질관리 등
+
