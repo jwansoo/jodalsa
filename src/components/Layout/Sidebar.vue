@@ -62,7 +62,7 @@ const adminLinks = computed(() =>
 const writtenMaterialLinks = computed(() => [{ title: '필기', icon: 'lucide:file-text' }])
 const coreRegulationLinks = computed(() => [{ title: '핵심규정', icon: 'lucide:scale' }])
 const practicalLinks = computed(() => [{ title: '실기', icon: 'lucide:pencil' }])
-const showCourseList = ref(false)
+const { showCourseList } = storeToRefs(useCourseMaterialsStore())
 const showWrittenMaterials = ref(false)
 const showCoreRegulations = ref(false)
 const showPractical = ref(false)
