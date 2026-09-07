@@ -1,3 +1,0 @@
-npx supabase migration up --linked
-db:migrate:new : supabase migration new => npm run db:migrate:new yesang_tests_schema
-우편번호찾기: https://www.epost.go.kr/search/zipcode/zipbook.jsp
