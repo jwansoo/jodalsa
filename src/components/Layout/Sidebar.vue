@@ -18,7 +18,6 @@
           <DropdownMenuItem :disabled="!profile?.is_admin" @click="$emit('testClicked')">
             Test
           </DropdownMenuItem>
-          <DropdownMenuItem>Project</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
