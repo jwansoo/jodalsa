@@ -22,16 +22,8 @@
     </div>
     <nav class="flex flex-col gap-2 justify-between h-full relative">
       <div>
-        <SidebarLinks :links="mainLinks" @actionClicked="executeMainAction" />
-        <div v-if="showCourseList && menuOpen" class="pl-4">
-          <SidebarLinks :links="writtenMaterialLinks" @actionClicked="executeMaterialAction" />
-          <CourseTree v-if="showWrittenMaterials" />
-          <SidebarLinks :links="coreRegulationLinks" @actionClicked="executeMaterialAction" />
-          <FlatMaterialList v-if="showCoreRegulations" :items="coreRegulationList" />
-          <SidebarLinks :links="practicalLinks" @actionClicked="executeMaterialAction" />
-          <FlatMaterialList v-if="showPractical" :items="practicalMaterialList" />
-        </div>
-        <SidebarLinks :links="adminLinks" @actionClicked="executeMainAction" />
+        <SidebarLinks :links="mainLinks" />
+        <SidebarLinks :links="adminLinks" />
       </div>
       <div class="border-y text-center bg-background py-3">
         <SidebarLinks :links="accountLinks" @actionClicked="executeAction" />
@@ -41,15 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import { coreRegulationList, practicalMaterialList } from '@/utils/courseList'
 import { menuKey, type MenuInjectionOprions } from '@/utils/injectionKeys'
 import { useWindowSize } from '@vueuse/core'
-const { user, profile } = storeToRefs(useAuthStore())
+const { profile } = storeToRefs(useAuthStore())
 const mainLinks = computed(() => [
   { title: '홈', to: '/', icon: 'lucide:house' },
   { title: '문제모음', to: '/jodalsa', icon: 'lucide:building' },
   { title: '모의고사', to: '/tests', icon: 'lucide:building-2' },
-  { title: '수험교재', icon: 'lucide:badge-check' },
+  { title: '수험교재', to: '/materials', icon: 'lucide:badge-check' },
 ])
 const adminLinks = computed(() =>
   profile.value?.is_admin
@@ -59,29 +50,8 @@ const adminLinks = computed(() =>
       ]
     : [],
 )
-const writtenMaterialLinks = computed(() => [{ title: '필기', icon: 'lucide:file-text' }])
-const coreRegulationLinks = computed(() => [{ title: '핵심규정', icon: 'lucide:scale' }])
-const practicalLinks = computed(() => [{ title: '실기', icon: 'lucide:pencil' }])
-const { showCourseList } = storeToRefs(useCourseMaterialsStore())
-const showWrittenMaterials = ref(false)
-const showCoreRegulations = ref(false)
-const showPractical = ref(false)
 const router = useRouter()
 
-const executeMainAction = (linkTitle: string) => {
-  if (linkTitle !== '수험교재') return
-  if (!user.value) {
-    router.push('/login')
-    return
-  }
-  showCourseList.value = !showCourseList.value
-}
-
-const executeMaterialAction = (linkTitle: string) => {
-  if (linkTitle === '필기') showWrittenMaterials.value = !showWrittenMaterials.value
-  else if (linkTitle === '핵심규정') showCoreRegulations.value = !showCoreRegulations.value
-  else if (linkTitle === '실기') showPractical.value = !showPractical.value
-}
 const accountLinks = computed(() =>
   profile.value
     ? [

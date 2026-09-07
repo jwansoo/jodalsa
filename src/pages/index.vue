@@ -41,10 +41,9 @@
           바로가기 <iconify-icon icon="lucide:arrow-right" />
         </span>
       </RouterLink>
-      <button
-        type="button"
-        class="group rounded-xl border bg-card p-6 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
-        @click="openCourseMaterials"
+      <RouterLink
+        :to="{ name: '/materials/' }"
+        class="group rounded-xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
       >
         <div
           class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary"
@@ -52,15 +51,13 @@
           <iconify-icon icon="lucide:badge-check" class="text-xl" />
         </div>
         <h2 class="mb-1 text-xl font-bold">수험교재</h2>
-        <p class="text-sm text-muted-foreground">
-          사이드바의 '수험교재' 메뉴에서 시험 범위와 교재 목차를 확인하세요.
-        </p>
+        <p class="text-sm text-muted-foreground">시험 범위별 필기·핵심규정·실기 교재를 확인하세요.</p>
         <span
           class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100"
         >
           바로가기 <iconify-icon icon="lucide:arrow-right" />
         </span>
-      </button>
+      </RouterLink>
     </section>
 
     <section class="rounded-xl border bg-muted/30 p-6">
@@ -84,22 +81,9 @@
 </template>
 
 <script setup lang="ts">
-import { menuKey, type MenuInjectionOprions } from '@/utils/injectionKeys'
-
 usePageStore().pageData.title = '홈'
 
 const { user } = storeToRefs(useAuthStore())
-const router = useRouter()
-const { menuOpen } = inject(menuKey) as MenuInjectionOprions
-
-const openCourseMaterials = () => {
-  if (!user.value) {
-    router.push('/login')
-    return
-  }
-  menuOpen.value = true
-  useCourseMaterialsStore().showCourseList = true
-}
 
 useMeta({
   title: '조달컨설팅 — 공공조달관리사 시험 준비',
