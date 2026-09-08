@@ -67,13 +67,13 @@
         >
           무료체험
         </span>
-        <h2 class="text-2xl font-bold">1회차 모의고사 무료체험</h2>
+        <h2 class="text-2xl font-bold">모의고사 '무료체험'</h2>
       </div>
       <p class="mb-4 text-muted-foreground">
-        로그인 없이 1회차 모의고사를 체험해보세요. 로그인하면 결과가 저장되어 나중에도 확인할 수
+        로그인 없이 모의고사를 체험해 보세요. 로그인하면 결과가 저장되어 나중에도 확인할 수
         있습니다.
       </p>
-      <ExamRunner round="1회차" start-collapsed />
+      <ExamRunner round="21회차" start-collapsed />
     </section>
 
     <ChatWidget />
