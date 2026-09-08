@@ -24,13 +24,12 @@ export const useEntitlementsStore = defineStore('entitlements-store', () => {
 
   const allowedRounds = computed(() => {
     if (hasAnnual.value) return new Set(Array.from({ length: 10 }, (_, i) => i + 1))
-    return new Set(
-      confirmedOrders.value
-        .filter((order): order is typeof order & { rounds_count: number } =>
-          Boolean(order.rounds_count),
-        )
-        .map((order) => order.rounds_count),
-    )
+
+    // Buying tier N ('N회') grants cumulative access to rounds 1..N, not just round N.
+    const maxRound = confirmedOrders.value
+      .filter((order) => order.product_type === 'select')
+      .reduce((max, order) => Math.max(max, order.rounds_count ?? 0), 0)
+    return new Set(Array.from({ length: maxRound }, (_, i) => i + 1))
   })
 
   const allowedMaterials = computed(() => {
