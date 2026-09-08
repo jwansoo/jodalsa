@@ -59,6 +59,13 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
+    '/admin/orders/': RouteRecordInfo<
+      '/admin/orders/',
+      '/admin/orders',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/jodalsa/': RouteRecordInfo<
       '/jodalsa/',
       '/jodalsa',
@@ -180,6 +187,14 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'id'
+    }
+    'src/pages/admin/orders/index.vue': {
+      routes:
+        | '/admin/orders/'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
     'src/pages/jodalsa/index.vue': {
       routes:

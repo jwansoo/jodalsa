@@ -49,7 +49,10 @@ const mainLinks = computed(() => [
 ])
 const adminLinks = computed(() =>
   profile.value?.is_admin
-    ? [{ title: '문의관리', to: '/admin/inquiries', icon: 'lucide:inbox' }]
+    ? [
+        { title: '문의관리', to: '/admin/inquiries', icon: 'lucide:inbox' },
+        { title: '입금확인', to: '/admin/orders', icon: 'lucide:receipt' },
+      ]
     : [],
 )
 const router = useRouter()

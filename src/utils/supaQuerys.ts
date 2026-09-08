@@ -81,3 +81,12 @@ export const createOrderQuery = (order: TablesInsert<'orders'>) =>
 export const ordersQuery = (userId: string) =>
   supabase.from('orders').select('*').eq('user_id', userId).order('created_at', { ascending: false })
 export type Orders = QueryData<ReturnType<typeof ordersQuery>>
+
+export const allOrdersQuery = supabase
+  .from('orders')
+  .select('*')
+  .order('created_at', { ascending: false })
+export type AllOrders = QueryData<typeof allOrdersQuery>
+
+export const updateOrderStatusQuery = (id: number, status: string) =>
+  supabase.from('orders').update({ status }).eq('id', id)

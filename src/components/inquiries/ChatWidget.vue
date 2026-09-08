@@ -113,6 +113,10 @@ const submit = () => (threadId.value ? sendMessage() : startThread())
   <div class="fixed right-6 bottom-6 z-50 flex flex-col items-end gap-3">
     <Card v-if="isOpen" class="flex h-96 w-80 flex-col gap-0 overflow-hidden py-0">
       <div class="border-b bg-muted/40 px-4 py-3 font-bold">문의하기</div>
+      <div class="border-b bg-primary/5 px-4 py-2 text-xs text-muted-foreground">
+        입금하셨다면 <strong class="text-foreground">'입금했다'</strong>라고 메시지를 남겨주세요.
+        확인 후 바로 상품이용이 가능합니다.
+      </div>
       <div class="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
         <template v-if="messages.length">
           <div
@@ -143,9 +147,21 @@ const submit = () => (threadId.value ? sendMessage() : startThread())
         </div>
       </form>
     </Card>
-    <Button size="icon" class="h-12 w-12 rounded-full shadow-lg" @click="togglePanel">
-      <iconify-icon :icon="isOpen ? 'lucide:x' : 'lucide:message-circle'" class="text-xl" />
-    </Button>
+    <div class="group relative">
+      <span
+        class="pointer-events-none absolute top-1/2 right-full mr-2 -translate-y-1/2 rounded-md bg-foreground px-2 py-1 text-xs whitespace-nowrap text-background opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+      >
+        채팅
+      </span>
+      <Button
+        size="icon"
+        class="h-12 w-12 rounded-full shadow-lg"
+        aria-label="채팅"
+        @click="togglePanel"
+      >
+        <iconify-icon :icon="isOpen ? 'lucide:x' : 'lucide:message-circle'" class="text-xl" />
+      </Button>
+    </div>
   </div>
 </template>
 

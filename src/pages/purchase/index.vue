@@ -113,6 +113,23 @@ const resetForm = () => {
           <strong class="text-foreground">{{ totalAmount.toLocaleString() }}원</strong>을
           입금해주시면 입금자명 확인 후 이용 가능하도록 처리해드립니다.
         </p>
+        <div
+          class="flex flex-col gap-1 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm"
+        >
+          <p>
+            <span class="text-muted-foreground">은행</span>
+            <span class="ml-2 font-bold">{{ bankAccount.bank }}</span>
+          </p>
+          <p>
+            <span class="text-muted-foreground">계좌번호</span>
+            <span class="ml-2 font-mono font-bold">{{ bankAccount.number }}</span>
+            <span class="ml-2 font-bold">{{ bankAccount.holder }}</span>
+          </p>
+        </div>
+        <p class="text-sm text-muted-foreground">
+          입금 후 홈 화면 우측 하단 채팅창에 <strong class="text-foreground">'입금했다'</strong>라고
+          남겨주시면 확인 후 바로 상품이용이 가능합니다.
+        </p>
         <Button variant="outline" @click="resetForm">다른 상품 신청하기</Button>
       </template>
 
