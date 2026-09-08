@@ -203,10 +203,11 @@ const resetForm = () => {
         <div class="flex flex-col gap-3">
           <p class="text-xs text-muted-foreground">
             카드 결제(PG)는 현재 신청 완료되어 심사 중이며, 약 5일 후부터 이용하실 수 있습니다. 그
-            전까지는 아래 계좌로 계좌이체 부탁드립니다. 입금 확인 후 이용 가능하도록
-            처리해드립니다.
+            전까지는 아래 계좌로 계좌이체 부탁드립니다. 입금 확인 후 이용 가능하도록 처리해드립니다.
           </p>
-          <div class="flex flex-col gap-1 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
+          <div
+            class="flex flex-col gap-1 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm"
+          >
             <p>
               <span class="text-muted-foreground">은행</span>
               <span class="ml-2 font-bold">{{ bankAccount.bank }}</span>

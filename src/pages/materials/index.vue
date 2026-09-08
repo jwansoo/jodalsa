@@ -12,6 +12,13 @@ useMeta({
     },
   ],
 })
+
+const { profile } = storeToRefs(useAuthStore())
+const entitlements = useEntitlementsStore()
+await entitlements.load()
+
+const canAccess = (material: string) =>
+  !!profile.value?.is_admin || entitlements.hasAnnual || entitlements.allowedMaterials.has(material)
 </script>
 
 <template>
@@ -25,9 +32,18 @@ useMeta({
       <h2 class="flex items-center gap-2 text-lg font-bold">
         <iconify-icon icon="lucide:file-text" />
         필기
+        <span v-if="!canAccess('필기')" class="text-xs font-normal text-muted-foreground">
+          (구매 필요)
+        </span>
       </h2>
-      <div class="rounded-lg border">
+      <div v-if="canAccess('필기')" class="rounded-lg border">
         <CourseTree />
+      </div>
+      <div v-else class="flex flex-col items-start gap-2 rounded-lg border bg-muted/20 p-4 text-sm">
+        <p class="text-muted-foreground">구매 후 이용 가능한 교재입니다.</p>
+        <RouterLink :to="{ name: '/purchase/' }" class="text-primary underline">
+          이용상품구매 바로가기
+        </RouterLink>
       </div>
     </section>
 
@@ -35,9 +51,18 @@ useMeta({
       <h2 class="flex items-center gap-2 text-lg font-bold">
         <iconify-icon icon="lucide:scale" />
         핵심규정
+        <span v-if="!canAccess('핵심규정')" class="text-xs font-normal text-muted-foreground">
+          (구매 필요)
+        </span>
       </h2>
-      <div class="rounded-lg border p-2">
+      <div v-if="canAccess('핵심규정')" class="rounded-lg border p-2">
         <FlatMaterialList :items="coreRegulationList" />
+      </div>
+      <div v-else class="flex flex-col items-start gap-2 rounded-lg border bg-muted/20 p-4 text-sm">
+        <p class="text-muted-foreground">구매 후 이용 가능한 교재입니다.</p>
+        <RouterLink :to="{ name: '/purchase/' }" class="text-primary underline">
+          이용상품구매 바로가기
+        </RouterLink>
       </div>
     </section>
 
@@ -45,9 +70,18 @@ useMeta({
       <h2 class="flex items-center gap-2 text-lg font-bold">
         <iconify-icon icon="lucide:pencil" />
         실기
+        <span v-if="!canAccess('실기')" class="text-xs font-normal text-muted-foreground">
+          (구매 필요)
+        </span>
       </h2>
-      <div class="rounded-lg border p-2">
+      <div v-if="canAccess('실기')" class="rounded-lg border p-2">
         <FlatMaterialList :items="practicalMaterialList" />
+      </div>
+      <div v-else class="flex flex-col items-start gap-2 rounded-lg border bg-muted/20 p-4 text-sm">
+        <p class="text-muted-foreground">구매 후 이용 가능한 교재입니다.</p>
+        <RouterLink :to="{ name: '/purchase/' }" class="text-primary underline">
+          이용상품구매 바로가기
+        </RouterLink>
       </div>
     </section>
   </div>

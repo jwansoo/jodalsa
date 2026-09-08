@@ -51,7 +51,9 @@
           <iconify-icon icon="lucide:badge-check" class="text-xl" />
         </div>
         <h2 class="mb-1 text-xl font-bold">수험교재</h2>
-        <p class="text-sm text-muted-foreground">시험 범위별 필기·핵심규정·실기 교재를 확인하세요.</p>
+        <p class="text-sm text-muted-foreground">
+          시험 범위별 필기·핵심규정·실기 교재를 확인하세요.
+        </p>
         <span
           class="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100"
         >

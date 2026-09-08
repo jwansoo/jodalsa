@@ -11,7 +11,11 @@ export const yesangsQuery = supabase.from('yesang_tests').select('*')
 export type Yesangs = QueryData<typeof yesangsQuery>
 
 export const searchYesangsQuery = (keyword: string) =>
-  supabase.from('yesang_tests').select('id, subject, subtitle, question').ilike('question', `%${keyword}%`).limit(5)
+  supabase
+    .from('yesang_tests')
+    .select('id, subject, subtitle, question')
+    .ilike('question', `%${keyword}%`)
+    .limit(5)
 
 export const testQuery = (list: string) =>
   supabase.from('jadal_tests').select('*').eq('round', list)
@@ -79,7 +83,11 @@ export const createOrderQuery = (order: TablesInsert<'orders'>) =>
   supabase.from('orders').insert(order).select().single()
 
 export const ordersQuery = (userId: string) =>
-  supabase.from('orders').select('*').eq('user_id', userId).order('created_at', { ascending: false })
+  supabase
+    .from('orders')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
 export type Orders = QueryData<ReturnType<typeof ordersQuery>>
 
 export const allOrdersQuery = supabase
