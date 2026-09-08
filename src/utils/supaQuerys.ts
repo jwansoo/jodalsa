@@ -98,3 +98,9 @@ export type AllOrders = QueryData<typeof allOrdersQuery>
 
 export const updateOrderStatusQuery = (id: number, status: string) =>
   supabase.from('orders').update({ status }).eq('id', id)
+
+export const confirmOrderQuery = (id: number) =>
+  supabase
+    .from('orders')
+    .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })
+    .eq('id', id)

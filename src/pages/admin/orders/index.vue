@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { allOrdersQuery, updateOrderStatusQuery, type AllOrders } from '@/utils/supaQuerys'
+import { addMonths, VALIDITY_MONTHS } from '@/utils/purchaseOptions'
+import { allOrdersQuery, confirmOrderQuery, type AllOrders } from '@/utils/supaQuerys'
 
 usePageStore().pageData.title = '입금확인'
 
@@ -35,9 +36,26 @@ const productLabel = (order: AllOrders[number]) => {
 const statusLabel = (status: string) =>
   status === 'confirmed' ? '입금확인' : status === 'canceled' ? '취소' : '대기중'
 
+const expiryLabel = (order: AllOrders[number]) => {
+  if (!order.confirmed_at) return '-'
+  const confirmedAt = new Date(order.confirmed_at)
+
+  if (order.product_type === 'annual') {
+    return `${addMonths(confirmedAt, VALIDITY_MONTHS.annual).toLocaleDateString()}까지`
+  }
+  const parts: string[] = []
+  if (order.rounds_count) {
+    parts.push(`회차 ${addMonths(confirmedAt, VALIDITY_MONTHS.rounds).toLocaleDateString()}`)
+  }
+  if (order.materials?.length) {
+    parts.push(`교재 ${addMonths(confirmedAt, VALIDITY_MONTHS.materials).toLocaleDateString()}`)
+  }
+  return parts.join(' / ') || '-'
+}
+
 const confirmOrder = async (id: number) => {
   processingId.value = id
-  const { error } = await updateOrderStatusQuery(id, 'confirmed')
+  const { error } = await confirmOrderQuery(id)
   processingId.value = null
   if (error) {
     useErrorStore().setError({ error })
@@ -60,6 +78,7 @@ const confirmOrder = async (id: number) => {
           <TableHead>금액</TableHead>
           <TableHead>입금자명</TableHead>
           <TableHead>상태</TableHead>
+          <TableHead>이용기한</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
@@ -73,6 +92,7 @@ const confirmOrder = async (id: number) => {
           <TableCell>{{ order.amount.toLocaleString() }}원</TableCell>
           <TableCell>{{ order.depositor_name }}</TableCell>
           <TableCell>{{ statusLabel(order.status) }}</TableCell>
+          <TableCell class="whitespace-nowrap">{{ expiryLabel(order) }}</TableCell>
           <TableCell>
             <Button
               v-if="order.status === 'pending_transfer'"

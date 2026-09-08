@@ -22,3 +22,16 @@ export const bankAccount = {
   number: '803501-00-153698',
   holder: '장완수(조달컨설팅)',
 }
+
+// 회당 사용은 3개월, 교재구독은 6개월, 년간구독은 12개월(모의고사·수험교재 모두) 이용 가능.
+export const VALIDITY_MONTHS = {
+  rounds: 3,
+  materials: 6,
+  annual: 12,
+} as const
+
+export const addMonths = (date: Date, months: number) => {
+  const result = new Date(date)
+  result.setMonth(result.getMonth() + months)
+  return result
+}

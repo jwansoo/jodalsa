@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { addMonths, VALIDITY_MONTHS } from '@/utils/purchaseOptions'
 import { ordersQuery, type Orders } from '@/utils/supaQuerys'
 
 usePageStore().pageData.title = '구매내역'
@@ -33,8 +34,41 @@ const productLabel = (order: Orders[number]) => {
   return parts.join(' + ') || '-'
 }
 
-const statusLabel = (status: string) =>
-  status === 'confirmed' ? '이용가능' : status === 'canceled' ? '취소됨' : '입금대기'
+const isActive = (confirmedAt: string | null, months: number) => {
+  if (!confirmedAt) return false
+  return addMonths(new Date(confirmedAt), months).getTime() > Date.now()
+}
+
+const isStillUsable = (order: Orders[number]) => {
+  if (order.product_type === 'annual') return isActive(order.confirmed_at, VALIDITY_MONTHS.annual)
+  const roundsOk = !!order.rounds_count && isActive(order.confirmed_at, VALIDITY_MONTHS.rounds)
+  const materialsOk =
+    !!order.materials?.length && isActive(order.confirmed_at, VALIDITY_MONTHS.materials)
+  return roundsOk || materialsOk
+}
+
+const statusLabel = (order: Orders[number]) => {
+  if (order.status === 'canceled') return '취소됨'
+  if (order.status === 'pending_transfer') return '입금대기'
+  return isStillUsable(order) ? '이용가능' : '만료됨'
+}
+
+const expiryLabel = (order: Orders[number]) => {
+  if (!order.confirmed_at) return '-'
+  const confirmedAt = new Date(order.confirmed_at)
+
+  if (order.product_type === 'annual') {
+    return `${addMonths(confirmedAt, VALIDITY_MONTHS.annual).toLocaleDateString()}까지`
+  }
+  const parts: string[] = []
+  if (order.rounds_count) {
+    parts.push(`회차 ${addMonths(confirmedAt, VALIDITY_MONTHS.rounds).toLocaleDateString()}`)
+  }
+  if (order.materials?.length) {
+    parts.push(`교재 ${addMonths(confirmedAt, VALIDITY_MONTHS.materials).toLocaleDateString()}`)
+  }
+  return parts.join(' / ') || '-'
+}
 </script>
 
 <template>
@@ -48,6 +82,7 @@ const statusLabel = (status: string) =>
           <TableHead>상품</TableHead>
           <TableHead>금액</TableHead>
           <TableHead>상태</TableHead>
+          <TableHead>이용기한</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -57,7 +92,8 @@ const statusLabel = (status: string) =>
           </TableCell>
           <TableCell>{{ productLabel(order) }}</TableCell>
           <TableCell>{{ order.amount.toLocaleString() }}원</TableCell>
-          <TableCell>{{ statusLabel(order.status) }}</TableCell>
+          <TableCell>{{ statusLabel(order) }}</TableCell>
+          <TableCell class="whitespace-nowrap">{{ expiryLabel(order) }}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
