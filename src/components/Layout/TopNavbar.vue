@@ -6,9 +6,14 @@ import type { RouteLocationRaw } from 'vue-router'
 
 const { profile } = storeToRefs(useAuthStore())
 const router = useRouter()
+const entitlements = useEntitlementsStore()
+entitlements.load()
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+
+const canAccessMaterial = (category: string) =>
+  !!profile.value?.is_admin || entitlements.hasAnnual || entitlements.allowedMaterials.has(category)
 
 interface SearchResult {
   key: string
@@ -45,26 +50,32 @@ const staticResults = computed<SearchResult[]>(() => {
   }
 
   const materials: SearchResult[] = [
-    ...courseList.flatMap((subject) =>
-      subject.children.map((title) => ({
-        key: `material-${subject.title}-${title}`,
-        title,
-        group: '수험교재 · 필기',
-        to: { name: '/materials/' } as RouteLocationRaw,
-      })),
-    ),
-    ...coreRegulationList.map((item) => ({
-      key: `material-core-${item.title}`,
-      title: item.title,
-      group: '수험교재 · 핵심규정',
-      to: { name: '/materials/' } as RouteLocationRaw,
-    })),
-    ...practicalMaterialList.map((item) => ({
-      key: `material-practical-${item.title}`,
-      title: item.title,
-      group: '수험교재 · 실기',
-      to: { name: '/materials/' } as RouteLocationRaw,
-    })),
+    ...(canAccessMaterial('필기')
+      ? courseList.flatMap((subject) =>
+          subject.children.map((title) => ({
+            key: `material-${subject.title}-${title}`,
+            title,
+            group: '수험교재 · 필기',
+            to: { name: '/materials/' } as RouteLocationRaw,
+          })),
+        )
+      : []),
+    ...(canAccessMaterial('핵심규정')
+      ? coreRegulationList.map((item) => ({
+          key: `material-core-${item.title}`,
+          title: item.title,
+          group: '수험교재 · 핵심규정',
+          to: { name: '/materials/' } as RouteLocationRaw,
+        }))
+      : []),
+    ...(canAccessMaterial('실기')
+      ? practicalMaterialList.map((item) => ({
+          key: `material-practical-${item.title}`,
+          title: item.title,
+          group: '수험교재 · 실기',
+          to: { name: '/materials/' } as RouteLocationRaw,
+        }))
+      : []),
   ]
 
   return [...pages, ...materials].filter((result) => result.title.includes(query))
