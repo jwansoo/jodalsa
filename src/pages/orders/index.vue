@@ -68,6 +68,8 @@ const statusLabel = (status: string) =>
       </RouterLink>
       에서 상품을 구매해보세요.
     </p>
+
+    <BackHomeLink />
   </div>
 </template>
 

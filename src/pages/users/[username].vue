@@ -68,6 +68,7 @@ const submitEdit = async () => {
       <p class="mt-2 text-sm">{{ profile?.bio || '' }}</p>
     </div>
     <Button v-if="isOwnProfile" @click="openEdit">프로필 수정</Button>
+    <BackHomeLink />
 
     <Dialog v-model:open="editOpen">
       <DialogContent class="sm:max-w-md">

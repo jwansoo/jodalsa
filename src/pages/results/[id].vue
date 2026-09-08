@@ -70,6 +70,8 @@ useMeta({
       </div>
     </template>
     <p v-else class="text-muted-foreground">아직 응시한 모의고사가 없습니다.</p>
+
+    <BackHomeLink />
   </div>
 </template>
 
