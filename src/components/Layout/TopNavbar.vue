@@ -115,10 +115,7 @@ const onSearchBlur = () => {
 
 <template>
   <nav class="h-16 border-b bg-muted/40 flex gap-2 justify-between px-6 items-center">
-    <form
-      class="relative h-fit w-full max-w-96"
-      @submit.prevent="allResults[0] && goToResult(allResults[0])"
-    >
+    <div class="relative h-fit w-full max-w-96" role="search">
       <iconify-icon
         class="absolute top-[50%] translate-y-[-50%] left-2.5 text-muted-foreground"
         icon="lucide:search"
@@ -128,8 +125,10 @@ const onSearchBlur = () => {
         class="w-full pl-8 bg-background"
         type="text"
         placeholder="검색 ..."
+        autocomplete="off"
         @focus="isSearchFocused = true"
         @blur="onSearchBlur"
+        @keydown.enter.prevent="allResults[0] && goToResult(allResults[0])"
       />
 
       <div
@@ -150,7 +149,7 @@ const onSearchBlur = () => {
         </ul>
         <p v-else class="px-3 py-2 text-sm text-muted-foreground">검색 결과가 없습니다.</p>
       </div>
-    </form>
+    </div>
     <div class="flex justify-center items-center gap-1">
       <div class="w-8 gap-4">
         <DropdownMenu v-if="profile">
