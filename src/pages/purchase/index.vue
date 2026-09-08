@@ -127,8 +127,9 @@ const resetForm = () => {
           </p>
         </div>
         <p class="text-sm text-muted-foreground">
-          입금 후 홈 화면 우측 하단 채팅창에 <strong class="text-foreground">'입금했다'</strong>라고
-          남겨주시면 확인 후 바로 상품이용이 가능합니다.
+          입금 후에는 전화(010-8625-5197)로 <strong class="text-foreground">'입금했다'</strong>라고
+          메시지를 남겨주시면 확인 후 바로 상품이용이 가능합니다. 또는 홈 화면 우측 하단 채팅창에
+          <strong class="text-foreground">'입금했다'</strong>라고 남겨주셔도 됩니다.
         </p>
         <Button variant="outline" @click="resetForm">다른 상품 신청하기</Button>
       </template>
