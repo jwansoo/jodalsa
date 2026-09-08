@@ -169,6 +169,10 @@ const onSearchBlur = () => {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
+              <RouterLink :to="{ name: '/orders/' }" class="w-full h-full"> 구매내역 </RouterLink>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
               <RouterLink
                 :to="{
                   name: '/results/[id]',

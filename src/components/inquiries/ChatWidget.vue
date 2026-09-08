@@ -63,6 +63,9 @@ onUnmounted(() => channel?.unsubscribe())
 
 const togglePanel = () => {
   isOpen.value = !isOpen.value
+  // Clicking leaves the button focused, which keeps the CSS hover/focus
+  // tooltip stuck visible after the panel closes unless we blur it here.
+  ;(document.activeElement as HTMLElement | null)?.blur()
 }
 
 const startThread = async () => {
