@@ -52,7 +52,7 @@ export default defineConfig({
         short_name: '조달컨설팅',
         description: '공공조달관리사 자격시험 준비 — 모의고사, 수험교재, 시험결과분석',
         lang: 'ko',
-        start_url: '/',
+        start_url: '/admin/orders',
         scope: '/',
         display: 'standalone',
         background_color: '#1e2a4a',
