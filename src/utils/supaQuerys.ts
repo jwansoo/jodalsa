@@ -10,6 +10,9 @@ export type Yesang = QueryData<ReturnType<typeof yesangQuery>>
 export const yesangsQuery = supabase.from('yesang_tests').select('*')
 export type Yesangs = QueryData<typeof yesangsQuery>
 
+export const searchYesangsQuery = (keyword: string) =>
+  supabase.from('yesang_tests').select('id, subject, subtitle, question').ilike('question', `%${keyword}%`).limit(5)
+
 export const testQuery = (list: string) =>
   supabase.from('jadal_tests').select('*').eq('round', list)
 export type Test = QueryData<ReturnType<typeof testQuery>>

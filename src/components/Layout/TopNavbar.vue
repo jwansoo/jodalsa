@@ -1,20 +1,144 @@
 <script setup lang="ts">
-import { useDark, useToggle } from '@vueuse/core'
+import { coreRegulationList, courseList, practicalMaterialList } from '@/utils/courseList'
+import { searchYesangsQuery } from '@/utils/supaQuerys'
+import { useDark, useToggle, watchDebounced } from '@vueuse/core'
+import type { RouteLocationRaw } from 'vue-router'
 
 const { profile } = storeToRefs(useAuthStore())
+const router = useRouter()
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+
+interface SearchResult {
+  key: string
+  title: string
+  group: string
+  to: RouteLocationRaw
+}
+
+const searchQuery = ref('')
+const isSearchFocused = ref(false)
+const yesangResults = ref<SearchResult[]>([])
+
+const staticResults = computed<SearchResult[]>(() => {
+  const query = searchQuery.value.trim()
+  if (!query) return []
+
+  const pages: SearchResult[] = [
+    { key: 'page-home', title: '홈', group: '메뉴', to: { name: '/' } },
+    { key: 'page-tests', title: '모의고사', group: '메뉴', to: { name: '/tests/' } },
+    { key: 'page-materials', title: '수험교재', group: '메뉴', to: { name: '/materials/' } },
+    { key: 'page-purchase', title: '이용상품구매', group: '메뉴', to: { name: '/purchase/' } },
+    { key: 'page-manual', title: '사용설명서', group: '메뉴', to: { name: '/manual' } },
+  ]
+  if (profile.value?.is_admin) {
+    pages.push(
+      { key: 'page-jodalsa', title: '문제모음', group: '메뉴', to: { name: '/jodalsa/' } },
+      {
+        key: 'page-inquiries',
+        title: '문의관리',
+        group: '메뉴',
+        to: { name: '/admin/inquiries/' },
+      },
+    )
+  }
+
+  const materials: SearchResult[] = [
+    ...courseList.flatMap((subject) =>
+      subject.children.map((title) => ({
+        key: `material-${subject.title}-${title}`,
+        title,
+        group: '수험교재 · 필기',
+        to: { name: '/materials/' } as RouteLocationRaw,
+      })),
+    ),
+    ...coreRegulationList.map((item) => ({
+      key: `material-core-${item.title}`,
+      title: item.title,
+      group: '수험교재 · 핵심규정',
+      to: { name: '/materials/' } as RouteLocationRaw,
+    })),
+    ...practicalMaterialList.map((item) => ({
+      key: `material-practical-${item.title}`,
+      title: item.title,
+      group: '수험교재 · 실기',
+      to: { name: '/materials/' } as RouteLocationRaw,
+    })),
+  ]
+
+  return [...pages, ...materials].filter((result) => result.title.includes(query))
+})
+
+watchDebounced(
+  searchQuery,
+  async (query) => {
+    const trimmed = query.trim()
+    if (!trimmed || !profile.value?.is_admin) {
+      yesangResults.value = []
+      return
+    }
+    const { data } = await searchYesangsQuery(trimmed)
+    yesangResults.value = (data ?? []).map((row) => ({
+      key: `yesang-${row.id}`,
+      title: row.question,
+      group: `문제모음 · ${row.subject}`,
+      to: { name: '/jodalsa/[id]', params: { id: row.id } },
+    }))
+  },
+  { debounce: 300 },
+)
+
+const allResults = computed(() => [...staticResults.value, ...yesangResults.value])
+
+const goToResult = (result: SearchResult) => {
+  router.push(result.to)
+  searchQuery.value = ''
+  isSearchFocused.value = false
+}
+
+const onSearchBlur = () => {
+  setTimeout(() => (isSearchFocused.value = false), 150)
+}
 </script>
 
 <template>
   <nav class="h-16 border-b bg-muted/40 flex gap-2 justify-between px-6 items-center">
-    <form class="relative h-fit w-full max-w-96">
+    <form
+      class="relative h-fit w-full max-w-96"
+      @submit.prevent="allResults[0] && goToResult(allResults[0])"
+    >
       <iconify-icon
         class="absolute top-[50%] translate-y-[-50%] left-2.5 text-muted-foreground"
         icon="lucide:search"
       ></iconify-icon>
-      <Input class="w-full pl-8 bg-background" type="text" placeholder="Search ..." />
+      <Input
+        v-model="searchQuery"
+        class="w-full pl-8 bg-background"
+        type="text"
+        placeholder="검색 ..."
+        @focus="isSearchFocused = true"
+        @blur="onSearchBlur"
+      />
+
+      <div
+        v-if="isSearchFocused && searchQuery.trim()"
+        class="absolute top-full z-50 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-md"
+      >
+        <ul v-if="allResults.length" class="max-h-80 overflow-y-auto py-1">
+          <li v-for="result in allResults" :key="result.key">
+            <button
+              type="button"
+              class="flex w-full flex-col items-start px-3 py-2 text-left text-sm hover:bg-muted"
+              @mousedown.prevent="goToResult(result)"
+            >
+              <span class="truncate">{{ result.title }}</span>
+              <span class="text-xs text-muted-foreground">{{ result.group }}</span>
+            </button>
+          </li>
+        </ul>
+        <p v-else class="px-3 py-2 text-sm text-muted-foreground">검색 결과가 없습니다.</p>
+      </div>
     </form>
     <div class="flex justify-center items-center gap-1">
       <div class="w-8 gap-4">
