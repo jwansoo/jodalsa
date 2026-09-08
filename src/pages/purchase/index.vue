@@ -21,20 +21,23 @@ useMeta({
 
 const { profile } = storeToRefs(useAuthStore())
 
-type ProductType = 'rounds' | 'materials' | 'annual'
+type ProductType = 'select' | 'annual'
 const productTypes: { key: ProductType; title: string }[] = [
-  { key: 'rounds', title: '회당 구매' },
-  { key: 'materials', title: '교재구독' },
-  { key: 'annual', title: '년간구독' },
+  { key: 'select', title: '선택이용' },
+  { key: 'annual', title: '년간이용' },
 ]
-const productType = ref<ProductType>('rounds')
+const productType = ref<ProductType>('select')
 
-const selectedRoundCount = ref(1)
+const selectedRoundCount = ref<number | null>(null)
 const selectedMaterials = ref<string[]>([])
 const depositorName = ref('')
 const isSubmitting = ref(false)
 const submitError = ref('')
 const submitted = ref(false)
+
+const toggleRoundCount = (count: number) => {
+  selectedRoundCount.value = selectedRoundCount.value === count ? null : count
+}
 
 const toggleMaterial = (key: string) => {
   const index = selectedMaterials.value.indexOf(key)
@@ -43,21 +46,16 @@ const toggleMaterial = (key: string) => {
 }
 
 const totalAmount = computed(() => {
-  if (productType.value === 'rounds') {
-    return roundPrices.find((r) => r.count === selectedRoundCount.value)?.amount ?? 0
-  }
-  if (productType.value === 'materials') {
-    return materialOptions
-      .filter((m) => selectedMaterials.value.includes(m.key))
-      .reduce((sum, m) => sum + m.amount, 0)
-  }
-  return annualSubscriptionAmount
+  if (productType.value === 'annual') return annualSubscriptionAmount
+
+  const roundAmount = roundPrices.find((r) => r.count === selectedRoundCount.value)?.amount ?? 0
+  const materialsAmount = materialOptions
+    .filter((m) => selectedMaterials.value.includes(m.key))
+    .reduce((sum, m) => sum + m.amount, 0)
+  return roundAmount + materialsAmount
 })
 
-const canSubmit = computed(() => {
-  if (productType.value === 'materials' && selectedMaterials.value.length === 0) return false
-  return totalAmount.value > 0 && !!depositorName.value.trim()
-})
+const canSubmit = computed(() => totalAmount.value > 0 && !!depositorName.value.trim())
 
 const submitOrder = async () => {
   if (!profile.value || !canSubmit.value) return
@@ -69,8 +67,11 @@ const submitOrder = async () => {
     user_id: profile.value.id,
     username: profile.value.username,
     product_type: productType.value,
-    rounds_count: productType.value === 'rounds' ? selectedRoundCount.value : null,
-    materials: productType.value === 'materials' ? selectedMaterials.value : null,
+    rounds_count: productType.value === 'select' ? selectedRoundCount.value : null,
+    materials:
+      productType.value === 'select' && selectedMaterials.value.length
+        ? selectedMaterials.value
+        : null,
     amount: totalAmount.value,
     depositor_name: depositorName.value.trim(),
   })
@@ -85,7 +86,7 @@ const submitOrder = async () => {
 
 const resetForm = () => {
   submitted.value = false
-  selectedRoundCount.value = 1
+  selectedRoundCount.value = null
   selectedMaterials.value = []
   depositorName.value = ''
 }
@@ -123,40 +124,44 @@ const resetForm = () => {
           </Button>
         </div>
 
-        <div v-if="productType === 'rounds'" class="flex flex-col gap-2">
-          <p class="text-sm text-muted-foreground">구매할 회차 수를 선택하세요. (1회당 2만원)</p>
-          <div class="grid grid-cols-5 gap-2">
-            <Button
-              v-for="round in roundPrices"
-              :key="round.count"
-              :variant="selectedRoundCount === round.count ? 'default' : 'outline'"
-              class="flex h-auto flex-col py-2"
-              @click="selectedRoundCount = round.count"
-            >
-              <span>{{ round.count }}회</span>
-              <span class="text-xs opacity-80">{{ round.amount.toLocaleString() }}원</span>
-            </Button>
-          </div>
-        </div>
-
-        <div v-else-if="productType === 'materials'" class="flex flex-col gap-2">
-          <p class="text-sm text-muted-foreground">구독할 교재를 선택하세요. (복수 선택 가능)</p>
+        <div v-if="productType === 'select'" class="flex flex-col gap-5">
           <div class="flex flex-col gap-2">
-            <Button
-              v-for="material in materialOptions"
-              :key="material.key"
-              :variant="selectedMaterials.includes(material.key) ? 'default' : 'outline'"
-              class="justify-between"
-              @click="toggleMaterial(material.key)"
-            >
-              <span>{{ material.title }}</span>
-              <span>{{ material.amount.toLocaleString() }}원</span>
-            </Button>
+            <p class="text-sm text-muted-foreground">
+              구매할 모의고사 회차 수를 선택하세요. (1회당 2만원, 선택 안 해도 됩니다)
+            </p>
+            <div class="grid grid-cols-5 gap-2">
+              <Button
+                v-for="round in roundPrices"
+                :key="round.count"
+                :variant="selectedRoundCount === round.count ? 'default' : 'outline'"
+                class="flex h-auto flex-col py-2"
+                @click="toggleRoundCount(round.count)"
+              >
+                <span>{{ round.count }}회</span>
+                <span class="text-xs opacity-80">{{ round.amount.toLocaleString() }}원</span>
+              </Button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <p class="text-sm text-muted-foreground">구독할 교재를 선택하세요. (복수 선택 가능)</p>
+            <div class="flex flex-col gap-2">
+              <Button
+                v-for="material in materialOptions"
+                :key="material.key"
+                :variant="selectedMaterials.includes(material.key) ? 'default' : 'outline'"
+                class="justify-between"
+                @click="toggleMaterial(material.key)"
+              >
+                <span>{{ material.title }}</span>
+                <span>{{ material.amount.toLocaleString() }}원</span>
+              </Button>
+            </div>
           </div>
         </div>
 
         <div v-else class="rounded-lg border bg-muted/30 p-4">
-          <p class="font-bold">년간구독</p>
+          <p class="font-bold">년간이용</p>
           <p class="text-sm text-muted-foreground">
             모의고사 전 회차와 수험교재(필기·핵심규정·실기)를 12개월간 모두 이용할 수 있습니다.
           </p>

@@ -4,7 +4,7 @@ create table
     created_at timestamptz default now() not null,
     user_id uuid references auth.users on delete cascade not null,
     username text not null,
-    product_type text not null check (product_type in ('rounds', 'materials', 'annual')),
+    product_type text not null check (product_type in ('select', 'annual')),
     rounds_count integer,
     materials text[],
     amount integer not null,
