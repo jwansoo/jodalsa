@@ -44,6 +44,7 @@ const mainLinks = computed(() => [
     : []),
   { title: '모의고사', to: '/tests', icon: 'lucide:building-2' },
   { title: '수험교재', to: '/materials', icon: 'lucide:badge-check' },
+  { title: '이용상품구매', to: '/purchase', icon: 'lucide:credit-card' },
   { title: '사용설명서', to: '/manual', icon: 'lucide:book-open' },
 ])
 const adminLinks = computed(() =>

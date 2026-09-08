@@ -112,6 +112,45 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          amount: number
+          created_at: string
+          depositor_name: string
+          id: number
+          materials: string[] | null
+          product_type: string
+          rounds_count: number | null
+          status: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          depositor_name: string
+          id?: number
+          materials?: string[] | null
+          product_type: string
+          rounds_count?: number | null
+          status?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          depositor_name?: string
+          id?: number
+          materials?: string[] | null
+          product_type?: string
+          rounds_count?: number | null
+          status?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

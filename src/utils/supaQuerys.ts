@@ -71,3 +71,10 @@ export const createInquiryMessageQuery = (message: TablesInsert<'inquiry_message
 
 export const courseMaterialSignedUrlQuery = (bucket: string, path: string) =>
   supabase.storage.from(bucket).createSignedUrl(path, 60)
+
+export const createOrderQuery = (order: TablesInsert<'orders'>) =>
+  supabase.from('orders').insert(order).select().single()
+
+export const ordersQuery = (userId: string) =>
+  supabase.from('orders').select('*').eq('user_id', userId).order('created_at', { ascending: false })
+export type Orders = QueryData<ReturnType<typeof ordersQuery>>
