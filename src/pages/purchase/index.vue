@@ -235,6 +235,8 @@ const resetForm = () => {
         </div>
       </template>
     </div>
+
+    <BackHomeLink />
   </div>
 </template>
 

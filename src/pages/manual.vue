@@ -21,6 +21,7 @@ useMeta({
   <div class="mx-auto max-w-3xl p-6">
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="manual-content" v-html="html"></div>
+    <BackHomeLink />
   </div>
 </template>
 
