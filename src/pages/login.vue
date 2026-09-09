@@ -48,8 +48,14 @@ const confirmOtp = async () => {
   <div class="mx-auto flex w-full justify-center items-center p-10 text-center -mt-20 min-h-[90vh]">
     <Card class="max-w-sm w-full mx-auto">
       <CardHeader>
-        <CardTitle class="text-2xl"> 로그인 </CardTitle>
-        <CardDescription> 계정에 로그인하세요 </CardDescription>
+        <template v-if="!otpRequired">
+          <CardTitle class="text-2xl"> 로그인 </CardTitle>
+          <CardDescription> 계정에 로그인하세요 </CardDescription>
+        </template>
+        <template v-else>
+          <CardTitle class="text-2xl"> 이메일을 확인해주세요 </CardTitle>
+          <CardDescription> 처음 사용하는 기기라 본인 확인이 필요합니다 </CardDescription>
+        </template>
       </CardHeader>
       <CardContent v-if="!otpRequired">
         <div class="flex flex-col gap-4 mb-4 justify-center items-center">
@@ -103,9 +109,10 @@ const confirmOtp = async () => {
         </div>
       </CardContent>
       <CardContent v-else>
-        <p class="text-sm text-muted-foreground mb-4">
-          처음 사용하는 기기입니다. <strong>{{ formData.email }}</strong
-          >로 전송된 인증코드를 입력해주세요.
+        <p class="text-sm mb-4 rounded-md border bg-muted/50 p-3 text-left">
+          <strong>{{ formData.email }}</strong
+          >로 인증코드를 보내드렸습니다. 메일함(스팸함 포함)을 확인하신 후, 메일에 적힌 코드를 아래
+          입력해주세요.
         </p>
         <form class="grid gap-4" @submit.prevent="confirmOtp">
           <div class="grid gap-2">
