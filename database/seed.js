@@ -8,6 +8,12 @@ if (!testingUserEmail) {
   process.exit()
 }
 
+const testingUserPassword = process.env.TESTING_USER_PASSWORD
+if (!testingUserPassword) {
+  console.error('Have you forgot to add TESTING_USER_PASSWORD to your .env file?')
+  process.exit()
+}
+
 const logErrorAndExit = (tableName, error) => {
   console.error(
     `An error occurred in table '${tableName}' with code ${error.code}: ${error.message}`,
@@ -44,7 +50,7 @@ const createPrimaryTestUser = async () => {
   const email = testingUserEmail
   const { data, error } = await supabase.auth.signUp({
     email: email,
-    password: 'password',
+    password: testingUserPassword,
     options: {
       data: {
         firstName: 'wansoo',

@@ -18,7 +18,7 @@ npm run supabase:login      # authenticate the Supabase CLI
 npm run supabase:link        # link this repo to the remote project
 npm run db:migrate:new -- <name>   # create a new migration in supabase/migrations
 npm run db:reset             # supabase db reset --linked
-npm run db:seed              # node --env-file=.env database/seed.js (requires TESTING_USER_EMAIL, SERVICE_ROLE_KEY)
+npm run db:seed              # node --env-file=.env database/seed.js (requires TESTING_USER_EMAIL, TESTING_USER_PASSWORD, SERVICE_ROLE_KEY)
 npm run supabase:types        # regenerate database/types.ts from the remote schema
 ```
 
@@ -31,7 +31,7 @@ To type-check or lint a single file, prefer running the underlying tool directly
 No `.env.example` is checked in; `.env` is gitignored. Required variables, inferred from usage:
 
 - `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` — used by `src/lib/supabaseClient.ts` (client-side)
-- `SERVICE_ROLE_KEY`, `TESTING_USER_EMAIL` — used by `database/seed.js` only (server-side, never expose `SERVICE_ROLE_KEY` client-side)
+- `SERVICE_ROLE_KEY`, `TESTING_USER_EMAIL`, `TESTING_USER_PASSWORD` — used by `database/seed.js` only (server-side, never expose `SERVICE_ROLE_KEY` client-side)
 
 ## Architecture
 
