@@ -10,10 +10,17 @@ const formData = ref({
 
 const { serverError, handleServerError, handleLoginForm, realtimeErrors } = useFormErrors()
 const router = useRouter()
+const route = useRoute()
 
-const otpRequired = ref(false)
 const otpCode = ref('')
 const otpError = ref('')
+
+// login() briefly signs the user in (to check trusted_devices) then signs back out for an
+// untrusted device — that flips App.vue's `:key="user?.id"` layout key twice and remounts
+// this whole page, wiping any local ref set afterward. Route query state survives that
+// remount, so the pending-OTP step lives there instead of in a local ref.
+const otpEmail = computed(() => (typeof route.query.otpEmail === 'string' ? route.query.otpEmail : ''))
+const otpRequired = computed(() => !!otpEmail.value)
 
 // Debounce the form login handler to avoid excessive validation calls
 watchDebounced(
@@ -28,8 +35,7 @@ const signin = async () => {
   const result = await login(formData.value)
   if (result.status === 'success') return router.push('/')
   if (result.status === 'otp_required') {
-    otpRequired.value = true
-    return
+    return router.replace({ name: '/login', query: { otpEmail: result.email } })
   }
 
   handleServerError(result.error)
@@ -37,11 +43,13 @@ const signin = async () => {
 
 const confirmOtp = async () => {
   otpError.value = ''
-  const { error } = await verifyLoginOtp(formData.value.email, otpCode.value)
+  const { error } = await verifyLoginOtp(otpEmail.value, otpCode.value)
   if (!error) return router.push('/')
 
   otpError.value = '인증코드가 올바르지 않거나 만료되었습니다. 다시 시도해주세요.'
 }
+
+const cancelOtp = () => router.replace({ name: '/login', query: {} })
 </script>
 
 <template>
@@ -110,7 +118,7 @@ const confirmOtp = async () => {
       </CardContent>
       <CardContent v-else>
         <p class="text-sm mb-4 rounded-md border bg-muted/50 p-3 text-left">
-          <strong>{{ formData.email }}</strong
+          <strong>{{ otpEmail }}</strong
           >로 인증코드를 보내드렸습니다. 메일함(스팸함 포함)을 확인하신 후, 메일에 적힌 코드를 아래
           입력해주세요.
         </p>
@@ -131,7 +139,7 @@ const confirmOtp = async () => {
             <li class="list-disc">{{ otpError }}</li>
           </ul>
           <Button type="submit" class="w-full"> 확인 </Button>
-          <Button type="button" variant="outline" class="w-full" @click="otpRequired = false">
+          <Button type="button" variant="outline" class="w-full" @click="cancelOtp">
             취소
           </Button>
         </form>
