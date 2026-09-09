@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFormErrors } from '@/composables/formErrors'
-import { login } from '@/utils/supaAuth'
+import { login, verifyLoginOtp } from '@/utils/supaAuth'
 import { watchDebounced } from '@vueuse/core'
 
 const formData = ref({
@@ -10,6 +10,10 @@ const formData = ref({
 
 const { serverError, handleServerError, handleLoginForm, realtimeErrors } = useFormErrors()
 const router = useRouter()
+
+const otpRequired = ref(false)
+const otpCode = ref('')
+const otpError = ref('')
 
 // Debounce the form login handler to avoid excessive validation calls
 watchDebounced(
@@ -21,10 +25,22 @@ watchDebounced(
 )
 
 const signin = async () => {
-  const { error } = await login(formData.value)
+  const result = await login(formData.value)
+  if (result.status === 'success') return router.push('/')
+  if (result.status === 'otp_required') {
+    otpRequired.value = true
+    return
+  }
+
+  handleServerError(result.error)
+}
+
+const confirmOtp = async () => {
+  otpError.value = ''
+  const { error } = await verifyLoginOtp(formData.value.email, otpCode.value)
   if (!error) return router.push('/')
 
-  handleServerError(error)
+  otpError.value = '인증코드가 올바르지 않거나 만료되었습니다. 다시 시도해주세요.'
 }
 </script>
 
@@ -35,7 +51,7 @@ const signin = async () => {
         <CardTitle class="text-2xl"> 로그인 </CardTitle>
         <CardDescription> 계정에 로그인하세요 </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent v-if="!otpRequired">
         <div class="flex flex-col gap-4 mb-4 justify-center items-center">
           <!-- <Button variant="outline" class="w-full"> 구글로 등록 </Button> -->
           <!-- <Separator label="또는" /> -->
@@ -85,6 +101,33 @@ const signin = async () => {
           계정이 없으신가요?
           <RouterLink to="/register" class="underline"> 계정 등록 </RouterLink>
         </div>
+      </CardContent>
+      <CardContent v-else>
+        <p class="text-sm text-muted-foreground mb-4">
+          처음 사용하는 기기입니다. <strong>{{ formData.email }}</strong
+          >로 전송된 인증코드를 입력해주세요.
+        </p>
+        <form class="grid gap-4" @submit.prevent="confirmOtp">
+          <div class="grid gap-2">
+            <Label id="otp" class="text-left">인증코드</Label>
+            <Input
+              id="otp"
+              type="text"
+              inputmode="numeric"
+              placeholder="6자리 코드 입력"
+              required
+              v-model="otpCode"
+              :class="{ 'border-red-500': otpError }"
+            />
+          </div>
+          <ul class="text-sm text-left text-red-500" v-if="otpError">
+            <li class="list-disc">{{ otpError }}</li>
+          </ul>
+          <Button type="submit" class="w-full"> 확인 </Button>
+          <Button type="button" variant="outline" class="w-full" @click="otpRequired = false">
+            취소
+          </Button>
+        </form>
       </CardContent>
     </Card>
   </div>

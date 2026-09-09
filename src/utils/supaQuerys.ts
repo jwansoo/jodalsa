@@ -104,3 +104,22 @@ export const confirmOrderQuery = (id: number) =>
     .from('orders')
     .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })
     .eq('id', id)
+
+export const trustedDeviceQuery = (userId: string, deviceId: string) =>
+  supabase
+    .from('trusted_devices')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('device_id', deviceId)
+    .maybeSingle()
+
+export const trustDeviceQuery = (userId: string, deviceId: string, userAgent: string) =>
+  supabase.from('trusted_devices').upsert(
+    {
+      user_id: userId,
+      device_id: deviceId,
+      user_agent: userAgent,
+      last_seen_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id,device_id' },
+  )
