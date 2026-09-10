@@ -55,6 +55,8 @@ const totalAmount = computed(() => {
   return roundAmount + materialsAmount
 })
 
+const discountedAmount = computed(() => Math.round(totalAmount.value * 0.5))
+
 const canSubmit = computed(() => totalAmount.value > 0 && !!depositorName.value.trim())
 
 const submitOrder = async () => {
@@ -72,7 +74,7 @@ const submitOrder = async () => {
       productType.value === 'select' && selectedMaterials.value.length
         ? selectedMaterials.value
         : null,
-    amount: totalAmount.value,
+    amount: discountedAmount.value,
     depositor_name: depositorName.value.trim(),
   })
 
@@ -110,7 +112,7 @@ const resetForm = () => {
         <h2 class="text-lg font-bold">신청이 접수되었습니다</h2>
         <p class="text-sm text-muted-foreground">
           아래 계좌로
-          <strong class="text-foreground">{{ totalAmount.toLocaleString() }}원</strong>을
+          <strong class="text-foreground">{{ discountedAmount.toLocaleString() }}원</strong>을
           입금해주시면 입금자명 확인 후 이용 가능하도록 처리해드립니다.
         </p>
         <div
@@ -149,8 +151,8 @@ const resetForm = () => {
         <div v-if="productType === 'select'" class="flex flex-col gap-4">
           <div class="flex flex-col gap-1.5">
             <p class="text-xs text-muted-foreground">
-              모의고사 회차 수 (1회당 2만원, 선택 시 1회차부터 해당 회차까지 이용 가능, 선택 안
-              해도 됩니다)
+              모의고사 회차 수 (1회당 2만원, 선택 시 1회차부터 해당 회차까지 이용 가능, 선택 안 해도
+              됩니다)
             </p>
             <div class="grid grid-cols-5 gap-1.5">
               <Button
@@ -195,9 +197,13 @@ const resetForm = () => {
 
         <Separator />
 
-        <div class="flex items-center justify-between">
-          <span class="font-bold">결제 금액</span>
-          <span class="text-xl font-bold">{{ totalAmount.toLocaleString() }}원</span>
+        <div class="flex items-center justify-between text-sm text-muted-foreground">
+          <span>정가</span>
+          <span class="line-through">{{ totalAmount.toLocaleString() }}원</span>
+        </div>
+        <div class="flex items-center justify-between text-primary">
+          <span class="font-bold">결제 금액 (회원가입 50% 할인 적용)</span>
+          <span class="text-xl font-bold">{{ discountedAmount.toLocaleString() }}원</span>
         </div>
 
         <Separator />

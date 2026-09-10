@@ -99,11 +99,6 @@ export type AllOrders = QueryData<typeof allOrdersQuery>
 export const updateOrderStatusQuery = (id: number, status: string) =>
   supabase.from('orders').update({ status }).eq('id', id)
 
-export const confirmedOrdersCountQuery = supabase
-  .from('orders')
-  .select('*', { count: 'exact', head: true })
-  .eq('status', 'confirmed')
-
 export const confirmOrderQuery = (id: number) =>
   supabase
     .from('orders')
