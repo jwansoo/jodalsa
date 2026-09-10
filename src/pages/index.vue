@@ -1,6 +1,10 @@
 <template>
   <div class="flex flex-col gap-10 p-6">
-    <HeroBanner @start-trial="scrollToTrial" @preview-book="router.push('/materials')" />
+    <HeroBanner
+      :free-round="21"
+      @start-trial="scrollToTrial"
+      @preview-book="router.push('/materials')"
+    />
 
     <div v-if="!user" class="flex justify-center gap-2">
       <RouterLink :to="{ name: '/register' }">

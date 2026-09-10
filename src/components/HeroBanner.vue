@@ -12,7 +12,7 @@
  *   Noto Serif KR : https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700
  *   Pretendard    : https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css
  */
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   /** 배너에 노출할 예시 문항. 미지정 시 기본 문항 사용 */
@@ -24,6 +24,8 @@ const props = defineProps({
 })
 
 defineEmits(['start-trial', 'preview-book'])
+
+const visible = ref(true)
 
 const defaultSample = {
   round: 3,
@@ -75,7 +77,11 @@ const facts = [
 </script>
 
 <template>
-  <section class="hero">
+  <section v-if="visible" class="hero">
+    <button type="button" class="close-btn" aria-label="배너 닫기" @click="visible = false">
+      <iconify-icon icon="lucide:x" />
+    </button>
+
     <div class="hero__inner">
       <div class="copy">
         <h1 class="headline">
@@ -94,9 +100,7 @@ const facts = [
         </p>
 
         <div class="cta">
-          <button class="btn btn--solid" @click="$emit('start-trial')">
-            모의고사 {{ freeRound }}회 무료로 풀기
-          </button>
+          <button class="btn btn--solid" @click="$emit('start-trial')">모의고사 무료 풀기</button>
           <button class="btn btn--ghost" @click="$emit('preview-book')">수험교재 미리보기</button>
         </div>
 
@@ -173,7 +177,7 @@ const facts = [
 
   position: relative;
   overflow: hidden;
-  padding: 88px 32px 0;
+  padding: 58px 32px 0;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
@@ -191,6 +195,35 @@ const facts = [
   pointer-events: none;
 }
 
+.close-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+.close-btn:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+.close-btn:focus-visible {
+  outline: 2px solid var(--tier-2);
+  outline-offset: 2px;
+}
+
 .hero__inner {
   position: relative;
   max-width: 1160px;
@@ -204,10 +237,10 @@ const facts = [
 .headline {
   font-family: var(--serif);
   font-weight: 700;
-  font-size: clamp(34px, 4.2vw, 56px);
-  line-height: 1.28;
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.26;
   letter-spacing: -0.022em;
-  margin: 0 0 28px;
+  margin: 0 0 18px;
   word-break: keep-all;
 }
 
@@ -218,20 +251,20 @@ const facts = [
 }
 
 .lede {
-  font-size: 18px;
-  line-height: 1.72;
+  font-size: 16px;
+  line-height: 1.6;
   color: var(--ink-soft);
   max-width: 40ch;
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   word-break: keep-all;
 }
 
 .detail {
-  font-size: 15.5px;
-  line-height: 1.78;
+  font-size: 14px;
+  line-height: 1.65;
   color: var(--muted);
   max-width: 42ch;
-  margin: 0 0 36px;
+  margin: 0 0 22px;
   word-break: keep-all;
 }
 .detail b {
@@ -243,11 +276,11 @@ const facts = [
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 44px;
+  margin-bottom: 28px;
 }
 
 .btn {
-  padding: 15px 26px;
+  padding: 11px 22px;
   border-radius: 3px;
   font-family: inherit;
   font-size: 16px;
@@ -283,7 +316,7 @@ const facts = [
   display: flex;
   list-style: none;
   margin: 0;
-  padding: 24px 0 0;
+  padding: 16px 0 0;
   border-top: 1px solid var(--rule);
 }
 .facts li {
@@ -299,14 +332,14 @@ const facts = [
   display: block;
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 27px;
+  font-size: 21px;
   line-height: 1.1;
   font-feature-settings: 'tnum';
 }
 .facts .k {
   display: block;
-  margin-top: 7px;
-  font-size: 13px;
+  margin-top: 5px;
+  font-size: 12px;
   color: var(--muted);
   word-break: keep-all;
 }
@@ -327,9 +360,9 @@ const facts = [
   justify-content: space-between;
   align-items: baseline;
   gap: 12px;
-  padding: 16px 24px;
+  padding: 11px 20px;
   border-bottom: 1px solid var(--rule);
-  font-size: 13.5px;
+  font-size: 12px;
   color: var(--muted);
 }
 .qcard__head strong {
@@ -342,13 +375,13 @@ const facts = [
 }
 
 .qcard__body {
-  padding: 26px 24px 22px;
+  padding: 17px 20px 15px;
 }
 
 .stem {
-  margin: 0 0 20px;
-  font-size: 16.5px;
-  line-height: 1.74;
+  margin: 0 0 13px;
+  font-size: 14.5px;
+  line-height: 1.6;
   word-break: keep-all;
 }
 
@@ -361,12 +394,12 @@ const facts = [
 .choices li {
   counter-increment: c;
   display: flex;
-  gap: 12px;
-  padding: 11px 13px;
+  gap: 10px;
+  padding: 7px 11px;
   border: 1px solid transparent;
   border-radius: 3px;
-  font-size: 15.5px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.4;
   color: var(--ink-soft);
   opacity: 0;
   animation: rise 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
@@ -398,12 +431,12 @@ const facts = [
 }
 
 .verdict {
-  margin-top: 18px;
-  padding: 15px 16px;
+  margin-top: 12px;
+  padding: 10px 14px;
   background: #f7f9fb;
   border-left: 3px solid var(--tier-3);
-  font-size: 14.5px;
-  line-height: 1.68;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--ink-soft);
   opacity: 0;
   animation: rise 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) 0.82s forwards;
@@ -430,15 +463,15 @@ const facts = [
 .rounds {
   display: flex;
   gap: 6px;
-  margin-top: 22px;
+  margin-top: 14px;
 }
 .rounds span {
   flex: 1;
-  padding: 8px 0;
+  padding: 6px 0;
   text-align: center;
   background: #fff;
   border: 1px solid var(--rule);
-  font-size: 12.5px;
+  font-size: 11.5px;
   color: var(--muted);
   font-feature-settings: 'tnum';
 }
@@ -449,16 +482,16 @@ const facts = [
 }
 
 .caption {
-  margin: 14px 0 0;
-  font-size: 12.5px;
+  margin: 10px 0 0;
+  font-size: 11.5px;
   color: var(--muted);
 }
 
 .books {
   position: relative;
   max-width: 1160px;
-  margin: 72px auto 0;
-  padding: 26px 0 88px;
+  margin: 48px auto 0;
+  padding: 18px 0 58px;
   border-top: 1px solid var(--rule);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -468,7 +501,7 @@ const facts = [
   grid-column: 1 / -1;
   margin: 0 0 4px;
   font-family: var(--serif);
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 500;
 }
 
@@ -483,21 +516,21 @@ const facts = [
   border-left-color: var(--brass);
 }
 .book h3 {
-  margin: 0 0 6px;
-  font-size: 15.5px;
+  margin: 0 0 4px;
+  font-size: 14.5px;
   font-weight: 600;
 }
 .book p {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.66;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--muted);
   word-break: keep-all;
 }
 
 @media (max-width: 900px) {
   .hero {
-    padding: 56px 20px 0;
+    padding: 38px 20px 0;
   }
   .hero__inner {
     grid-template-columns: 1fr;
@@ -521,8 +554,8 @@ const facts = [
   .books {
     grid-template-columns: 1fr;
     gap: 22px;
-    margin-top: 52px;
-    padding-bottom: 56px;
+    margin-top: 35px;
+    padding-bottom: 38px;
   }
 }
 
