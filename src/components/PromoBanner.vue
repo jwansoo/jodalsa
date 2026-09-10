@@ -9,7 +9,7 @@ defineProps({
   discountRate: { type: Number, default: 30 },
 })
 
-defineEmits(['claim', 'trial'])
+defineEmits(['claim', 'trial', 'dismiss-today'])
 </script>
 
 <template>
@@ -31,6 +31,8 @@ defineEmits(['claim', 'trial'])
         <button class="btn btn--solid" @click="$emit('claim')">할인가로 신청하기</button>
         <button class="btn btn--ghost" @click="$emit('trial')">모의고사 1회 무료로 풀기</button>
       </div>
+
+      <button class="dismiss-today" @click="$emit('dismiss-today')">오늘 하루 보지 않기</button>
 
       <ul class="terms">
         <li>본 할인은 신규 회원가입자 전원에게 적용됩니다.</li>
@@ -133,6 +135,26 @@ defineEmits(['claim', 'trial'])
   border-color: rgba(255, 255, 255, 0.55);
 }
 .btn:focus-visible {
+  outline: 2px solid #7fb4ce;
+  outline-offset: 3px;
+}
+
+.dismiss-today {
+  display: block;
+  margin: 0 0 18px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #78848f;
+  font-size: 12.5px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.dismiss-today:hover {
+  color: #a9b4c0;
+}
+.dismiss-today:focus-visible {
   outline: 2px solid #7fb4ce;
   outline-offset: 3px;
 }

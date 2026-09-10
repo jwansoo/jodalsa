@@ -75,7 +75,7 @@
     <Dialog v-model:open="promoOpen">
       <DialogContent class="max-w-3xl overflow-hidden border-0 bg-transparent p-0 shadow-none">
         <DialogTitle class="sr-only">회원가입 할인 안내</DialogTitle>
-        <PromoBanner @claim="onPromoClaim" @trial="onPromoTrial" />
+        <PromoBanner @claim="onPromoClaim" @trial="onPromoTrial" @dismiss-today="onPromoDismissToday" />
       </DialogContent>
     </Dialog>
   </div>
@@ -91,7 +91,17 @@ const scrollToTrial = () => {
   document.getElementById('trial')?.scrollIntoView({ behavior: 'smooth' })
 }
 
-const promoOpen = ref(true)
+const PROMO_DISMISS_KEY = 'promo-banner-dismiss-date'
+
+const isPromoDismissedToday = () => {
+  try {
+    return localStorage.getItem(PROMO_DISMISS_KEY) === new Date().toDateString()
+  } catch {
+    return false
+  }
+}
+
+const promoOpen = ref(!isPromoDismissedToday())
 
 const onPromoClaim = () => {
   promoOpen.value = false
@@ -101,6 +111,15 @@ const onPromoClaim = () => {
 const onPromoTrial = () => {
   promoOpen.value = false
   nextTick(() => scrollToTrial())
+}
+
+const onPromoDismissToday = () => {
+  promoOpen.value = false
+  try {
+    localStorage.setItem(PROMO_DISMISS_KEY, new Date().toDateString())
+  } catch {
+    // localStorage unavailable (private browsing etc.) — just close for this visit
+  }
 }
 
 useMeta({
