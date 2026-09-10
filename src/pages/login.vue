@@ -8,7 +8,7 @@ const formData = ref({
   password: '',
 })
 
-const { serverError, handleServerError, handleLoginForm, realtimeErrors } = useFormErrors()
+const { mapServerError, handleLoginForm, realtimeErrors } = useFormErrors()
 const router = useRouter()
 const route = useRoute()
 
@@ -18,9 +18,13 @@ const otpError = ref('')
 // login() briefly signs the user in (to check trusted_devices) then signs back out for an
 // untrusted device — that flips App.vue's `:key="user?.id"` layout key twice and remounts
 // this whole page, wiping any local ref set afterward. Route query state survives that
-// remount, so the pending-OTP step lives there instead of in a local ref.
+// remount, so both the pending-OTP step and the post-login error live there instead of in
+// local refs.
 const otpEmail = computed(() => (typeof route.query.otpEmail === 'string' ? route.query.otpEmail : ''))
 const otpRequired = computed(() => !!otpEmail.value)
+const serverError = computed(() =>
+  typeof route.query.loginError === 'string' ? route.query.loginError : '',
+)
 
 // Debounce the form login handler to avoid excessive validation calls
 watchDebounced(
@@ -38,7 +42,7 @@ const signin = async () => {
     return router.replace({ name: '/login', query: { otpEmail: result.email } })
   }
 
-  handleServerError(result.error)
+  return router.replace({ name: '/login', query: { loginError: mapServerError(result.error) } })
 }
 
 const confirmOtp = async () => {
