@@ -20,7 +20,7 @@ await getTasks()
 
 const editOpen = ref(false)
 const editError = ref('')
-const editForm = ref({ username: '', full_name: '', bio: '' })
+const editForm = ref({ username: '', full_name: '', bio: '', birthdate: '' })
 
 const openEdit = () => {
   if (!profile.value) return
@@ -28,6 +28,7 @@ const openEdit = () => {
     username: profile.value.username,
     full_name: profile.value.full_name,
     bio: profile.value.bio ?? '',
+    birthdate: profile.value.birthdate ?? '',
   }
   editError.value = ''
   editOpen.value = true
@@ -41,6 +42,7 @@ const submitEdit = async () => {
     username: editForm.value.username.trim(),
     full_name: editForm.value.full_name.trim(),
     bio: editForm.value.bio.trim() || null,
+    birthdate: editForm.value.birthdate || null,
   })
 
   if (error) {
@@ -66,6 +68,9 @@ const submitEdit = async () => {
       <p class="mt-2 text-gray-500">@{{ profile?.username }}</p>
       <h1 class="mt-5 text-4xl font-bold">{{ profile?.full_name }}</h1>
       <p class="mt-2 text-sm">{{ profile?.bio || '' }}</p>
+      <p v-if="isOwnProfile && profile?.birthdate" class="mt-2 text-sm text-gray-500">
+        생년월일: {{ profile.birthdate }}
+      </p>
     </div>
     <Button v-if="isOwnProfile" @click="openEdit">프로필 수정</Button>
     <BackHomeLink />
@@ -87,6 +92,10 @@ const submitEdit = async () => {
           <div class="grid gap-2">
             <Label>소개글</Label>
             <Input v-model="editForm.bio" />
+          </div>
+          <div class="grid gap-2">
+            <Label>생년월일</Label>
+            <Input type="date" v-model="editForm.birthdate" />
           </div>
           <ul class="text-sm text-left text-red-500" v-if="editError">
             <li class="list-disc">{{ editError }}</li>

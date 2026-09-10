@@ -20,6 +20,7 @@ export const register = async (
       username: formData.username,
       full_name: formData.lastName.concat(' ', formData.firstName),
       phone: formData.phone,
+      birthdate: formData.birthdate,
     })
 
     if (profileError) return { error: profileError }

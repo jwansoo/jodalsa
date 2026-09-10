@@ -7,6 +7,7 @@ const formData = ref({
   lastName: '',
   email: '',
   phone: '',
+  birthdate: '',
   password: '',
   confirmPassword: '',
 })
@@ -98,6 +99,11 @@ const signup = async () => {
               required
               v-model="formData.phone"
             />
+          </div>
+
+          <div class="grid gap-2">
+            <Label id="birthdate" class="text-left">생년월일</Label>
+            <Input id="birthdate" type="date" required v-model="formData.birthdate" />
           </div>
 
           <div class="grid gap-2">

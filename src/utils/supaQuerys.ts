@@ -42,7 +42,7 @@ export const profileQuery = ({ column, value }: { column: string; value: string 
 
 export const updateProfileQuery = (
   id: string,
-  updates: Pick<TablesUpdate<'profiles'>, 'username' | 'full_name' | 'bio'>,
+  updates: Pick<TablesUpdate<'profiles'>, 'username' | 'full_name' | 'bio' | 'birthdate'>,
 ) => supabase.from('profiles').update(updates).eq('id', id).select().single()
 
 export const upsertTestResultQuery = (result: TablesInsert<'test_results'>) => {
