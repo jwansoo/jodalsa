@@ -18,7 +18,7 @@ defineEmits(['claim', 'trial'])
       <span class="kicker">개설 기념 · 회원가입 특별 혜택</span>
 
       <h2 class="promo__title">
-        회원가입하신 모든 분께<br />
+        회원가입하신 선착순 50분께<br />
         이용료를 <em>{{ discountRate }}%</em> 할인해 드립니다.
       </h2>
 
