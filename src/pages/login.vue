@@ -133,7 +133,7 @@ const cancelOtp = () => router.replace({ name: '/login', query: {} })
               id="otp"
               type="text"
               inputmode="numeric"
-              placeholder="6자리 코드 입력"
+              placeholder="인증코드 입력"
               required
               v-model="otpCode"
               :class="{ 'border-red-500': otpError }"
