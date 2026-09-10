@@ -14,8 +14,8 @@
         <button type="button" @click="togglePanel('list_1')">회사소개</button> |
         <button type="button" @click="togglePanel('list_2')">개인정보처리방침</button> |
         <button type="button" @click="togglePanel('list_3')">이용약관</button>
-        <h1>대표자: 장완수 주소:세종특별시 금남면 성덕1길 85-7 tel 010-8625-5197</h1>
-        <h1>사업자등록번호 541-12-03229</h1>
+        <h1>대표자: 장완수 주소:세종특별시 금남면 성덕1길 85-7 tel 044-866-5197</h1>
+        <h1>사업자등록번호 541-12-03229 | 통신판매업신고증 제2026-세종-0612호</h1>
       </div>
     </nav>
   </div>
