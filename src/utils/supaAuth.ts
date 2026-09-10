@@ -37,6 +37,10 @@ export type LoginResult =
   | { status: 'otp_required'; error: null; email: string }
   | { status: 'error'; error: AuthError }
 
+// TEMPORARY — PG(결제) 심사용 계정은 심사자가 다른 기기에서 로그인해도 OTP 메일을 받을 수 없으므로
+// 기기신뢰 확인을 건너뛴다. PG 심사가 끝나면 이 상수와 아래 분기를 반드시 삭제할 것.
+const OTP_BYPASS_EMAILS = ['pgtest@jodalsa.com']
+
 export const login = async (formData: LoginForm): Promise<LoginResult> => {
   const { data, error } = await supabase.auth.signInWithPassword({
     email: formData.email,
@@ -44,6 +48,10 @@ export const login = async (formData: LoginForm): Promise<LoginResult> => {
   })
 
   if (error) return { status: 'error', error }
+
+  if (OTP_BYPASS_EMAILS.includes(formData.email)) {
+    return { status: 'success', error: null }
+  }
 
   const deviceId = getDeviceId()
   const { data: trustedDevice } = await trustedDeviceQuery(data.user.id, deviceId)
