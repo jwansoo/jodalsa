@@ -1,27 +1,15 @@
 <template>
   <div class="flex flex-col gap-10 p-6">
-    <section
-      class="relative overflow-hidden rounded-2xl border bg-gradient-to-b from-primary/10 via-background to-background px-6 py-16 text-center"
-    >
-      <div class="mx-auto flex max-w-2xl flex-col items-center gap-4">
-        <span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-          공공조달관리사 자격시험
-        </span>
-        <h1 class="text-3xl font-bold sm:text-3xl">공공조달관리사, 조달컨설팅과 함께 준비하세요</h1>
-        <p class="max-w-xl text-muted-foreground">
-          모의고사, 수험교재까지 — 공공조달관리사 자격시험 준비에 필요한 모든 것을 한 곳에서
-          제공합니다.
-        </p>
-        <div v-if="!user" class="flex gap-2">
-          <RouterLink :to="{ name: '/register' }">
-            <Button size="lg">회원가입</Button>
-          </RouterLink>
-          <RouterLink :to="{ name: '/login' }">
-            <Button size="lg" variant="outline">로그인</Button>
-          </RouterLink>
-        </div>
-      </div>
-    </section>
+    <HeroBanner @start-trial="scrollToTrial" @preview-book="router.push('/materials')" />
+
+    <div v-if="!user" class="flex justify-center gap-2">
+      <RouterLink :to="{ name: '/register' }">
+        <Button size="lg">회원가입</Button>
+      </RouterLink>
+      <RouterLink :to="{ name: '/login' }">
+        <Button size="lg" variant="outline">로그인</Button>
+      </RouterLink>
+    </div>
 
     <section class="grid gap-4 sm:grid-cols-2">
       <RouterLink
@@ -62,7 +50,7 @@
       </RouterLink>
     </section>
 
-    <section class="rounded-xl border bg-muted/30 p-6">
+    <section id="trial" class="rounded-xl border bg-muted/30 p-6">
       <div class="mb-4 flex flex-wrap items-center gap-3">
         <span
           class="rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground"
@@ -85,7 +73,12 @@
 <script setup lang="ts">
 usePageStore().pageData.title = '홈'
 
+const router = useRouter()
 const { user } = storeToRefs(useAuthStore())
+
+const scrollToTrial = () => {
+  document.getElementById('trial')?.scrollIntoView({ behavior: 'smooth' })
+}
 
 useMeta({
   title: '조달컨설팅 — 공공조달관리사 시험 준비',

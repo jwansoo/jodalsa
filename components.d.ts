@@ -65,6 +65,7 @@ declare module 'vue' {
     FlatMaterialList: typeof import('./src/components/Layout/FlatMaterialList.vue')['default']
     Footbar: typeof import('./src/components/Layout/Footbar.vue')['default']
     GuestLayout: typeof import('./src/components/Layout/main/GuestLayout.vue')['default']
+    HeroBanner: typeof import('./src/components/HeroBanner.vue')['default']
     Input: typeof import('./src/components/ui/input/Input.vue')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
