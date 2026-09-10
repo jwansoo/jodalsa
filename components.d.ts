@@ -68,6 +68,7 @@ declare module 'vue' {
     HeroBanner: typeof import('./src/components/HeroBanner.vue')['default']
     Input: typeof import('./src/components/ui/input/Input.vue')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']
+    PromoBanner: typeof import('./src/components/PromoBanner.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Separator: typeof import('./src/components/ui/separator/Separator.vue')['default']

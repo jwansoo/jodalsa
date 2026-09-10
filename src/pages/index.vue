@@ -71,10 +71,19 @@
     </section>
 
     <ChatWidget />
+
+    <Dialog v-model:open="promoOpen">
+      <DialogContent class="max-w-3xl overflow-hidden border-0 bg-transparent p-0 shadow-none">
+        <DialogTitle class="sr-only">선착순 할인 안내</DialogTitle>
+        <PromoBanner :taken="confirmedOrdersCount" @claim="onPromoClaim" @trial="onPromoTrial" />
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import { confirmedOrdersCountQuery } from '@/utils/supaQuerys'
+
 usePageStore().pageData.title = '홈'
 
 const router = useRouter()
@@ -83,6 +92,23 @@ const { user } = storeToRefs(useAuthStore())
 const scrollToTrial = () => {
   document.getElementById('trial')?.scrollIntoView({ behavior: 'smooth' })
 }
+
+const promoOpen = ref(true)
+const confirmedOrdersCount = ref(0)
+
+const onPromoClaim = () => {
+  promoOpen.value = false
+  router.push('/purchase')
+}
+
+const onPromoTrial = () => {
+  promoOpen.value = false
+  nextTick(() => scrollToTrial())
+}
+
+confirmedOrdersCountQuery.then(({ count }) => {
+  confirmedOrdersCount.value = count ?? 0
+})
 
 useMeta({
   title: '조달컨설팅 — 공공조달관리사 시험 준비',
