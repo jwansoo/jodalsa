@@ -55,7 +55,7 @@ const totalAmount = computed(() => {
   return roundAmount + materialsAmount
 })
 
-const discountedAmount = computed(() => Math.round(totalAmount.value * 0.5))
+const discountedAmount = computed(() => Math.round(totalAmount.value * 0.7))
 
 const canSubmit = computed(() => totalAmount.value > 0 && !!depositorName.value.trim())
 
@@ -151,7 +151,7 @@ const resetForm = () => {
         <div v-if="productType === 'select'" class="flex flex-col gap-4">
           <div class="flex flex-col gap-1.5">
             <p class="text-xs text-muted-foreground">
-              모의고사 회차 수 (1회당 2만원, 선택 시 1회차부터 해당 회차까지 이용 가능, 선택 안 해도
+              모의고사 회차 수 (1회당 1만원, 선택 시 1회차부터 해당 회차까지 이용 가능, 선택 안 해도
               됩니다)
             </p>
             <div class="grid grid-cols-5 gap-1.5">
@@ -202,7 +202,7 @@ const resetForm = () => {
           <span class="line-through">{{ totalAmount.toLocaleString() }}원</span>
         </div>
         <div class="flex items-center justify-between text-primary">
-          <span class="font-bold">결제 금액 (회원가입 50% 할인 적용)</span>
+          <span class="font-bold">결제 금액 (회원가입 30% 할인 적용)</span>
           <span class="text-xl font-bold">{{ discountedAmount.toLocaleString() }}원</span>
         </div>
 

@@ -3,10 +3,10 @@
  * 회원가입 할인 광고 배너
  *
  * 사용:
- *   <PromoBanner :discount-rate="50" @claim="goCheckout" @trial="goFreeRound" />
+ *   <PromoBanner :discount-rate="30" @claim="goCheckout" @trial="goFreeRound" />
  */
 defineProps({
-  discountRate: { type: Number, default: 50 },
+  discountRate: { type: Number, default: 30 },
 })
 
 defineEmits(['claim', 'trial'])
@@ -24,7 +24,7 @@ defineEmits(['claim', 'trial'])
 
       <p class="promo__lede">
         1,000문항으로 편성한 10회분 실전 모의고사와 핵심요약·공공조달관리사·국가계약법령·MAS 등
-        수험교재를 절반 가격에 이용하실 수 있습니다.
+        수험교재를 {{ discountRate }}% 할인된 가격에 이용하실 수 있습니다.
       </p>
 
       <div class="cta">
