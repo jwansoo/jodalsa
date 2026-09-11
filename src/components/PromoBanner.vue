@@ -23,8 +23,8 @@ defineEmits(['claim', 'trial', 'dismiss-today'])
       </h2>
 
       <p class="promo__lede">
-        1,000문항으로 편성한 10회분 실전 모의고사와 핵심요약·공공조달관리사·국가계약법령·MAS 등
-        수험교재를 {{ discountRate }}% 할인된 가격에 이용하실 수 있습니다.
+        1,000문항으로 편성한 10회분 실전 모의고사와 핵심요약(국가계약법령·MAS) 등 수험교재를
+        {{ discountRate }}% 할인된 가격에 이용하실 수 있습니다.
       </p>
 
       <div class="cta">
