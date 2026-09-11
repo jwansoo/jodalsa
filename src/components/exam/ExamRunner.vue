@@ -276,7 +276,7 @@ const saveResult = async () => {
 
         <div
           v-if="viewedPeriod !== null"
-          class="flex flex-col rounded-md bg-[#f8f5ec] px-4 dark:bg-transparent"
+          class="flex flex-col rounded-md bg-[#f8f5ec] px-4 text-[#2a2f3a] dark:bg-transparent dark:text-[#cdd3da]"
         >
           <ExamQuestion
             v-for="question in periodQuestions[viewedPeriod]"
