@@ -62,7 +62,7 @@
       </template>
       <template v-else>
         <p class="mb-4 text-muted-foreground">
-          로그인 후 모의고사 무료체험을 이용하실 수 있습니다.
+          회원가입 후 로그인하여 모의고사 무료체험을 이용하실 수 있습니다.
         </p>
         <div class="flex gap-2">
           <RouterLink :to="{ name: '/register' }">

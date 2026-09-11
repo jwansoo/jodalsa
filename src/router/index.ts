@@ -9,7 +9,8 @@ router.beforeEach(async (to, _from) => {
   const authStore = useAuthStore()
   await authStore.getSession()
   const isAuthPage = ['/login', '/register'].includes(to.path)
-  const isPublicPage = to.path === '/' || to.path === '/intro' || isAuthPage
+  const isPublicPage =
+    to.path === '/' || to.path === '/intro' || to.path === '/manual' || isAuthPage
   if (!isPublicPage && !authStore.user) {
     return {
       name: '/login',
