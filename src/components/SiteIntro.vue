@@ -208,11 +208,11 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 
 <style scoped>
 .site-intro {
-  --si-ink: #1e2b4f;
-  --si-soft: #56607a;
-  --si-text: #2a2f3a;
-  --si-rule: #d9dee7;
-  --si-accent: #3a6ea5;
+  --si-ink: var(--card-foreground);
+  --si-soft: var(--muted-foreground);
+  --si-text: var(--card-foreground);
+  --si-rule: var(--border);
+  --si-accent: var(--primary);
   --si-serif: 'Noto Serif KR', 'Nanum Myeongjo', 'AppleMyungjo', 'Batang', serif;
   --si-sans: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   --si-offset: 96px; /* 사이트 공통 헤더 높이 + 여유 */
@@ -221,7 +221,9 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
   max-width: 1080px;
   margin: 0 auto;
   padding: 64px 32px 96px 56px;
-  background: #fff;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
   color: var(--si-text);
   font-family: var(--si-sans);
   font-size: 17px;
