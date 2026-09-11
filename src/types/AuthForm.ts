@@ -10,5 +10,4 @@ export interface RegisterForm extends LoginForm {
   lastName: string
   phone: string
   birthdate: string
-  workplaceName: string
 }
