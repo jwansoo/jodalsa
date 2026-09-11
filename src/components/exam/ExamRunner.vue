@@ -274,7 +274,10 @@ const saveResult = async () => {
           </button>
         </div>
 
-        <div v-if="viewedPeriod !== null" class="flex flex-col">
+        <div
+          v-if="viewedPeriod !== null"
+          class="flex flex-col rounded-md bg-[#f8f5ec] px-4 dark:bg-transparent"
+        >
           <ExamQuestion
             v-for="question in periodQuestions[viewedPeriod]"
             :key="question.id"
