@@ -48,11 +48,15 @@ export const useEntitlementsStore = defineStore('entitlements-store', () => {
   const allowedMaterials = computed(() => {
     if (hasAnnual.value) return new Set(['필기', '핵심규정', '실기'])
 
-    // 교재구독은 6개월.
+    // 교재구독은 3개월.
     const materials = new Set<string>()
     confirmedOrders.value
       .filter((order) => isActive(order.confirmed_at, VALIDITY_MONTHS.materials))
       .forEach((order) => order.materials?.forEach((m) => materials.add(m)))
+
+    // 핵심규정은 별도 판매하지 않고, 필기 + 회차 10회(전체)를 모두 보유한 회원에게 자동 제공.
+    if (materials.has('필기') && allowedRounds.value.has(10)) materials.add('핵심규정')
+
     return materials
   })
 

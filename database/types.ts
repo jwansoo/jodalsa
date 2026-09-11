@@ -172,6 +172,7 @@ export type Database = {
           mode: string
           phone: string | null
           username: string
+          workplace_name: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -184,6 +185,7 @@ export type Database = {
           mode?: string
           phone?: string | null
           username: string
+          workplace_name?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -196,6 +198,7 @@ export type Database = {
           mode?: string
           phone?: string | null
           username?: string
+          workplace_name?: string | null
         }
         Relationships: []
       }

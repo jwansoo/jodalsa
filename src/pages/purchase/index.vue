@@ -3,10 +3,12 @@ import * as PortOne from '@portone/browser-sdk/v2'
 import {
   annualSubscriptionAmount,
   bankAccount,
+  DISCOUNT_TIERS,
   materialOptions,
   roundPrices,
+  type DiscountTierKey,
 } from '@/utils/purchaseOptions'
-import { createOrderQuery } from '@/utils/supaQuerys'
+import { createOrderQuery, updateProfileQuery } from '@/utils/supaQuerys'
 
 usePageStore().pageData.title = '이용상품구매'
 
@@ -35,16 +37,23 @@ const depositorName = ref('')
 const isSubmitting = ref(false)
 const submitError = ref('')
 const submitted = ref(false)
+const discountTier = ref<DiscountTierKey>('new')
+const workplaceName = ref('')
 
 const toggleRoundCount = (count: number) => {
   selectedRoundCount.value = selectedRoundCount.value === count ? null : count
 }
 
-const toggleMaterial = (key: string) => {
-  const index = selectedMaterials.value.indexOf(key)
-  if (index === -1) selectedMaterials.value.push(key)
+const toggleMaterial = (material: (typeof materialOptions)[number]) => {
+  if (material.disabled) return
+  const index = selectedMaterials.value.indexOf(material.key)
+  if (index === -1) selectedMaterials.value.push(material.key)
   else selectedMaterials.value.splice(index, 1)
 }
+
+const selectedTier = computed(
+  () => DISCOUNT_TIERS.find((tier) => tier.key === discountTier.value) ?? DISCOUNT_TIERS[0],
+)
 
 const totalAmount = computed(() => {
   if (productType.value === 'annual') return annualSubscriptionAmount
@@ -56,15 +65,37 @@ const totalAmount = computed(() => {
   return roundAmount + materialsAmount
 })
 
-const discountedAmount = computed(() => Math.round(totalAmount.value * 0.7))
+const discountedAmount = computed(() =>
+  Math.round(totalAmount.value * (1 - selectedTier.value.rate)),
+)
 
-const canSubmit = computed(() => totalAmount.value > 0 && !!depositorName.value.trim())
+const canSubmit = computed(
+  () =>
+    totalAmount.value > 0 &&
+    !!depositorName.value.trim() &&
+    (discountTier.value !== 'group' || !!workplaceName.value.trim()),
+)
+
+// 단체가입은 profiles.workplace_name에 저장해두고 관리자가 입금확인 시 함께 확인한다.
+const saveWorkplaceNameIfNeeded = async () => {
+  if (discountTier.value !== 'group' || !profile.value) return true
+  const { error } = await updateProfileQuery(profile.value.id, {
+    workplace_name: workplaceName.value.trim(),
+  })
+  return !error
+}
 
 const submitOrder = async () => {
   if (!profile.value || !canSubmit.value) return
 
   isSubmitting.value = true
   submitError.value = ''
+
+  if (!(await saveWorkplaceNameIfNeeded())) {
+    isSubmitting.value = false
+    submitError.value = '직장명 저장에 실패했습니다. 잠시 후 다시 시도해주세요.'
+    return
+  }
 
   const { error } = await createOrderQuery({
     user_id: profile.value.id,
@@ -92,6 +123,8 @@ const resetForm = () => {
   selectedRoundCount.value = null
   selectedMaterials.value = []
   depositorName.value = ''
+  discountTier.value = 'new'
+  workplaceName.value = ''
 }
 
 const orderName = computed(() => {
@@ -108,10 +141,20 @@ const cardPaySuccess = ref(false)
 
 const payWithCard = async () => {
   if (!profile.value || totalAmount.value <= 0) return
+  if (discountTier.value === 'group' && !workplaceName.value.trim()) {
+    cardPayError.value = '단체가입은 직장명을 입력해주세요.'
+    return
+  }
 
   cardPaySubmitting.value = true
   cardPayError.value = ''
   cardPaySuccess.value = false
+
+  if (!(await saveWorkplaceNameIfNeeded())) {
+    cardPaySubmitting.value = false
+    cardPayError.value = '직장명 저장에 실패했습니다. 잠시 후 다시 시도해주세요.'
+    return
+  }
 
   try {
     const response = await PortOne.requestPayment({
@@ -147,7 +190,7 @@ const payWithCard = async () => {
     <div>
       <h1 class="text-2xl font-bold">이용상품구매</h1>
       <p class="text-sm text-muted-foreground">
-        회당 사용은 3개월, 교재구독은 6개월, 년간구독은 12개월(모의고사·수험교재 모두) 이용하실 수
+        회당 사용은 3개월, 교재구독은 3개월, 년간구독은 12개월(모의고사·수험교재 모두) 이용하실 수
         있습니다.
       </p>
     </div>
@@ -190,9 +233,11 @@ const payWithCard = async () => {
             v-for="type in productTypes"
             :key="type.key"
             :variant="productType === type.key ? 'default' : 'outline'"
-            @click="productType = type.key"
+            :disabled="type.key === 'annual'"
+            @click="type.key !== 'annual' && (productType = type.key)"
           >
             {{ type.title }}
+            <span v-if="type.key === 'annual'" class="text-xs">(일시중단)</span>
           </Button>
         </div>
 
@@ -220,17 +265,25 @@ const payWithCard = async () => {
           <div class="flex flex-col gap-1.5">
             <p class="text-xs text-muted-foreground">교재구독 (복수 선택 가능)</p>
             <div class="flex flex-col gap-1.5">
-              <Button
-                v-for="material in materialOptions"
-                :key="material.key"
-                :variant="selectedMaterials.includes(material.key) ? 'default' : 'outline'"
-                size="sm"
-                class="justify-between"
-                @click="toggleMaterial(material.key)"
-              >
-                <span>{{ material.title }}</span>
-                <span>{{ material.amount.toLocaleString() }}원</span>
-              </Button>
+              <template v-for="material in materialOptions" :key="material.key">
+                <Button
+                  v-if="!material.disabled"
+                  :variant="selectedMaterials.includes(material.key) ? 'default' : 'outline'"
+                  size="sm"
+                  class="justify-between"
+                  @click="toggleMaterial(material)"
+                >
+                  <span>{{ material.title }}</span>
+                  <span>{{ material.amount.toLocaleString() }}원</span>
+                </Button>
+                <div
+                  v-else
+                  class="flex items-center justify-between rounded-md border border-dashed px-3 py-1.5 text-sm text-muted-foreground"
+                >
+                  <span>{{ material.title }}</span>
+                  <span class="text-xs">{{ material.note }}</span>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -245,12 +298,38 @@ const payWithCard = async () => {
 
         <Separator />
 
+        <div class="flex flex-col gap-1.5">
+          <p class="text-xs text-muted-foreground">가입 조건</p>
+          <div class="flex gap-2">
+            <Button
+              v-for="tier in DISCOUNT_TIERS"
+              :key="tier.key"
+              :variant="discountTier === tier.key ? 'default' : 'outline'"
+              size="sm"
+              @click="discountTier = tier.key"
+            >
+              {{ tier.title }} ({{ Math.round(tier.rate * 100) }}% 할인)
+            </Button>
+          </div>
+          <div v-if="discountTier === 'group'" class="grid gap-1.5 pt-1">
+            <Label class="text-sm">직장명</Label>
+            <Input
+              v-model="workplaceName"
+              placeholder="소속 단체/직장명을 입력하세요"
+              required
+            />
+          </div>
+        </div>
+
         <div class="flex items-center justify-between text-sm text-muted-foreground">
           <span>정가</span>
           <span class="line-through">{{ totalAmount.toLocaleString() }}원</span>
         </div>
         <div class="flex items-center justify-between text-primary">
-          <span class="font-bold">결제 금액 (회원가입 30% 할인 적용)</span>
+          <span class="font-bold">
+            결제 금액 ({{ selectedTier.title }} {{ Math.round(selectedTier.rate * 100) }}% 할인
+            적용)
+          </span>
           <span class="text-xl font-bold">{{ discountedAmount.toLocaleString() }}원</span>
         </div>
 
