@@ -96,7 +96,9 @@ const cancelOtp = () => router.replace({ name: '/login', query: {} })
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label id="password">비밀번호</Label>
-              <a href="#" class="inline-block ml-auto text-xs underline"> 암호를 잊으셨나요? </a>
+              <RouterLink to="/forgot-password" class="inline-block ml-auto text-xs underline">
+                암호를 잊으셨나요?
+              </RouterLink>
             </div>
             <Input
               id="password"

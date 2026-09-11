@@ -81,6 +81,21 @@ export const verifyLoginOtp = async (email: string, token: string) => {
   return { error: null }
 }
 
+export const requestPasswordReset = async (email: string) => {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  })
+  return { error }
+}
+
+export const resetPassword = async (password: string) => {
+  const { data, error } = await supabase.auth.updateUser({ password })
+  if (error || !data.user) return { error: error ?? new Error('비밀번호 변경에 실패했습니다.') }
+
+  await trustDeviceQuery(data.user.id, getDeviceId(), navigator.userAgent)
+  return { error: null }
+}
+
 export const logout = async () => {
   const { error } = await supabase.auth.signOut()
   if (error) return console.log(error)

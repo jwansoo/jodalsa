@@ -73,6 +73,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/forgot-password': RouteRecordInfo<
+      '/forgot-password',
+      '/forgot-password',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/intro': RouteRecordInfo<
       '/intro',
       '/intro',
@@ -132,6 +139,13 @@ declare module 'vue-router/auto-routes' {
     '/register': RouteRecordInfo<
       '/register',
       '/register',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/reset-password': RouteRecordInfo<
+      '/reset-password',
+      '/reset-password',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -225,6 +239,14 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
+    'src/pages/forgot-password.vue': {
+      routes:
+        | '/forgot-password'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
     'src/pages/intro.vue': {
       routes:
         | '/intro'
@@ -292,6 +314,14 @@ declare module 'vue-router/auto-routes' {
     'src/pages/register.vue': {
       routes:
         | '/register'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/pages/reset-password.vue': {
+      routes:
+        | '/reset-password'
       views:
         | never
       pathParamNames:
