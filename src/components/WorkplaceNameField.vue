@@ -6,7 +6,7 @@ const modelValue = defineModel<string>({ default: '' })
 const OTHER = '__other__'
 
 const organizations = ref<PartnerOrganizations>([])
-const selectValue = ref('')
+const selectValue = ref(OTHER)
 const otherText = ref('')
 let initialized = false
 
@@ -19,7 +19,7 @@ onMounted(async () => {
   const match = organizations.value.find((org) => org.name === modelValue.value)
   if (match) {
     selectValue.value = match.name
-  } else if (modelValue.value) {
+  } else {
     selectValue.value = OTHER
     otherText.value = modelValue.value
   }
@@ -36,7 +36,6 @@ watch([selectValue, otherText], () => {
       v-model="selectValue"
       class="border-input flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs"
     >
-      <option value="">선택 안 함</option>
       <option v-for="org in organizations" :key="org.id" :value="org.name">
         {{ org.name }}
       </option>
