@@ -73,7 +73,9 @@
     <ChatWidget />
 
     <Dialog v-model:open="promoOpen">
-      <DialogContent class="max-w-3xl overflow-hidden border-0 bg-transparent p-0 shadow-none">
+      <DialogContent
+        class="promo-dialog max-w-3xl overflow-hidden border-0 bg-transparent p-0 shadow-none"
+      >
         <DialogTitle class="sr-only">회원가입 할인 안내</DialogTitle>
         <PromoBanner @claim="onPromoClaim" @trial="onPromoTrial" @dismiss-today="onPromoDismissToday" />
       </DialogContent>
@@ -133,4 +135,10 @@ useMeta({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+/* PromoBanner has its own fixed dark background regardless of site theme,
+   so the dialog close button needs a fixed light color to stay visible in light mode. */
+:deep(.promo-dialog [data-slot='dialog-close']) {
+  color: #eef1f5;
+}
+</style>
