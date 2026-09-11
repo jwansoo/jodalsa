@@ -37,9 +37,8 @@ const depositorName = ref('')
 const isSubmitting = ref(false)
 const submitError = ref('')
 const submitted = ref(false)
-const discountTier = ref<DiscountTierKey>('new')
 
-// 단체가입(70%)은 profiles.workplace_name이 관리자가 등록해둔 단체 명단에 있어야만 선택 가능.
+// 단체회원(70%)은 profiles.workplace_name이 관리자가 등록해둔 단체 명단에 있어야만 자동 적용.
 const partnerOrgNames = ref<Set<string>>(new Set())
 onMounted(async () => {
   const { data } = await partnerOrganizationsQuery
@@ -48,6 +47,8 @@ onMounted(async () => {
 const isGroupEligible = computed(
   () => !!profile.value?.workplace_name && partnerOrgNames.value.has(profile.value.workplace_name),
 )
+// 직장명이 등록된 단체 명단에 있으면 단체회원, 아니면 신입회원 — 사용자가 고를 수 없는 자동 판정.
+const discountTier = computed<DiscountTierKey>(() => (isGroupEligible.value ? 'group' : 'new'))
 
 const toggleRoundCount = (count: number) => {
   selectedRoundCount.value = selectedRoundCount.value === count ? null : count
@@ -78,12 +79,7 @@ const discountedAmount = computed(() =>
   Math.round(totalAmount.value * (1 - selectedTier.value.rate)),
 )
 
-const canSubmit = computed(
-  () =>
-    totalAmount.value > 0 &&
-    !!depositorName.value.trim() &&
-    (discountTier.value !== 'group' || isGroupEligible.value),
-)
+const canSubmit = computed(() => totalAmount.value > 0 && !!depositorName.value.trim())
 
 const submitOrder = async () => {
   if (!profile.value || !canSubmit.value) return
@@ -117,7 +113,6 @@ const resetForm = () => {
   selectedRoundCount.value = null
   selectedMaterials.value = []
   depositorName.value = ''
-  discountTier.value = 'new'
 }
 
 const orderName = computed(() => {
@@ -134,10 +129,6 @@ const cardPaySuccess = ref(false)
 
 const payWithCard = async () => {
   if (!profile.value || totalAmount.value <= 0) return
-  if (discountTier.value === 'group' && !isGroupEligible.value) {
-    cardPayError.value = '등록된 단체 소속만 단체가입 할인을 이용할 수 있습니다.'
-    return
-  }
 
   cardPaySubmitting.value = true
   cardPayError.value = ''
@@ -287,20 +278,19 @@ const payWithCard = async () => {
 
         <div class="flex flex-col gap-1.5">
           <p class="text-xs text-muted-foreground">가입 조건</p>
-          <div class="flex gap-2">
-            <Button
-              v-for="tier in DISCOUNT_TIERS"
-              :key="tier.key"
-              :variant="discountTier === tier.key ? 'default' : 'outline'"
-              size="sm"
-              :disabled="tier.key === 'group' && !isGroupEligible"
-              @click="discountTier = tier.key"
-            >
-              {{ tier.title }} ({{ Math.round(tier.rate * 100) }}% 할인)
-            </Button>
+          <div
+            class="inline-flex w-fit items-center rounded-md border px-3 py-1.5 text-sm font-bold"
+            :class="
+              isGroupEligible
+                ? 'border-primary/40 bg-primary/10 text-primary'
+                : 'bg-background text-foreground'
+            "
+          >
+            {{ selectedTier.title }} ({{ Math.round(selectedTier.rate * 100) }}% 할인)
           </div>
           <p v-if="!isGroupEligible" class="text-xs text-muted-foreground">
-            단체가입은 등록된 단체 소속 회원만 이용할 수 있습니다. 프로필에서 직장명을 확인해주세요.
+            직장명이 등록된 단체 소속 명단에 있으면 자동으로 단체회원(70% 할인)이 적용됩니다. 현재는
+            신입회원 할인이 적용됩니다. 프로필에서 직장명을 확인해주세요.
           </p>
         </div>
 

@@ -27,10 +27,10 @@ export const materialOptions: MaterialOption[] = [
 
 export const annualSubscriptionAmount = 200000
 
-// 신규가입/단체가입 할인 티어. 협력단체는 profiles.workplace_name으로 확인.
+// 신입회원/단체회원 할인 티어. 협력단체는 profiles.workplace_name으로 확인.
 export const DISCOUNT_TIERS = [
   { key: 'new', title: '신입회원', rate: 0.5 },
-  { key: 'group', title: '단체가입', rate: 0.7 },
+  { key: 'group', title: '단체회원', rate: 0.7 },
 ] as const
 export type DiscountTierKey = (typeof DISCOUNT_TIERS)[number]['key']
 
