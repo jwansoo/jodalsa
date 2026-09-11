@@ -32,6 +32,7 @@ No `.env.example` is checked in; `.env` is gitignored. Required variables, infer
 
 - `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` — used by `src/lib/supabaseClient.ts` (client-side)
 - `SERVICE_ROLE_KEY`, `TESTING_USER_EMAIL`, `TESTING_USER_PASSWORD` — used by `database/seed.js` only (server-side, never expose `SERVICE_ROLE_KEY` client-side)
+- `VITE_PORTONE_STORE_ID`, `VITE_PORTONE_CHANNEL_KEY` — used by `src/pages/purchase/index.vue` (client-side) to call `@portone/browser-sdk/v2`'s `requestPayment` for the PG-review test card-payment button; currently set to the KG이니시스 **test** channel (see PG review note below)
 
 ## Architecture
 

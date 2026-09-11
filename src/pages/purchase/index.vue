@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import * as PortOne from '@portone/browser-sdk/v2'
 import {
   annualSubscriptionAmount,
   bankAccount,
@@ -19,7 +20,7 @@ useMeta({
   ],
 })
 
-const { profile } = storeToRefs(useAuthStore())
+const { profile, user } = storeToRefs(useAuthStore())
 
 type ProductType = 'select' | 'annual'
 const productTypes: { key: ProductType; title: string }[] = [
@@ -91,6 +92,53 @@ const resetForm = () => {
   selectedRoundCount.value = null
   selectedMaterials.value = []
   depositorName.value = ''
+}
+
+const orderName = computed(() => {
+  if (productType.value === 'annual') return '년간이용'
+  const parts: string[] = []
+  if (selectedRoundCount.value) parts.push(`모의고사 ${selectedRoundCount.value}회`)
+  parts.push(...selectedMaterials.value)
+  return parts.join(' + ') || '이용상품구매'
+})
+
+const cardPaySubmitting = ref(false)
+const cardPayError = ref('')
+const cardPaySuccess = ref(false)
+
+const payWithCard = async () => {
+  if (!profile.value || totalAmount.value <= 0) return
+
+  cardPaySubmitting.value = true
+  cardPayError.value = ''
+  cardPaySuccess.value = false
+
+  try {
+    const response = await PortOne.requestPayment({
+      storeId: import.meta.env.VITE_PORTONE_STORE_ID,
+      channelKey: import.meta.env.VITE_PORTONE_CHANNEL_KEY,
+      paymentId: `jodal-${crypto.randomUUID().replace(/-/g, '')}`,
+      orderName: orderName.value,
+      totalAmount: discountedAmount.value,
+      currency: 'KRW',
+      payMethod: 'CARD',
+      customer: {
+        fullName: profile.value.full_name,
+        email: user.value?.email,
+        phoneNumber: profile.value.phone ?? undefined,
+      },
+    })
+
+    if (!response || response.code) {
+      cardPayError.value = response?.message || '결제가 취소되었거나 실패했습니다.'
+      return
+    }
+    cardPaySuccess.value = true
+  } catch (err) {
+    cardPayError.value = err instanceof Error ? err.message : '결제 창 호출에 실패했습니다.'
+  } finally {
+    cardPaySubmitting.value = false
+  }
 }
 </script>
 
@@ -213,6 +261,24 @@ const resetForm = () => {
             카드 결제(PG)는 현재 신청 완료되어 심사 중이며, 약 5일 후부터 이용하실 수 있습니다. 그
             전까지는 아래 계좌로 계좌이체 부탁드립니다. 입금 확인 후 이용 가능하도록 처리해드립니다.
           </p>
+
+          <div class="flex flex-col gap-1.5 rounded-lg border border-dashed p-3">
+            <p class="text-xs text-muted-foreground">
+              PG 심사용 카드결제 테스트입니다. 실제 결제·출금은 이루어지지 않습니다.
+            </p>
+            <Button
+              variant="secondary"
+              :disabled="totalAmount === 0 || cardPaySubmitting"
+              @click="payWithCard"
+            >
+              {{ cardPaySubmitting ? '결제창 여는 중...' : '카드결제 테스트하기' }}
+            </Button>
+            <p v-if="cardPaySuccess" class="text-sm text-primary">테스트 결제가 완료되었습니다.</p>
+            <ul class="text-sm text-left text-red-500" v-if="cardPayError">
+              <li class="list-disc">{{ cardPayError }}</li>
+            </ul>
+          </div>
+
           <div
             class="flex flex-col gap-1 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm"
           >

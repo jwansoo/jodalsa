@@ -24,6 +24,7 @@
   "dependencies": {
     "@formkit/vue": "^2.1.2",
     "@lucide/vue": "^1.40.0",
+    "@portone/browser-sdk": "^0.1.10",
     "@supabase/supabase-js": "^2.112.4",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/vue-table": "^9.2.4",
