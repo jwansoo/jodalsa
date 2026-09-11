@@ -8,6 +8,7 @@ const formData = ref({
   email: '',
   phone: '',
   birthdate: '',
+  workplaceName: '',
   password: '',
   confirmPassword: '',
 })
@@ -104,6 +105,11 @@ const signup = async () => {
           <div class="grid gap-2">
             <Label id="birthdate" class="text-left">생년월일</Label>
             <Input id="birthdate" type="date" required v-model="formData.birthdate" />
+          </div>
+
+          <div class="grid gap-2">
+            <Label class="text-left">직장명 (단체 소속인 경우 선택, 아니면 직접 입력)</Label>
+            <WorkplaceNameField v-model="formData.workplaceName" />
           </div>
 
           <div class="grid gap-2">

@@ -84,5 +84,6 @@ declare module 'vue' {
     TableHeader: typeof import('./src/components/ui/table/TableHeader.vue')['default']
     TableRow: typeof import('./src/components/ui/table/TableRow.vue')['default']
     TopNavbar: typeof import('./src/components/Layout/TopNavbar.vue')['default']
+    WorkplaceNameField: typeof import('./src/components/WorkplaceNameField.vue')['default']
   }
 }

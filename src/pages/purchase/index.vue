@@ -8,7 +8,7 @@ import {
   roundPrices,
   type DiscountTierKey,
 } from '@/utils/purchaseOptions'
-import { createOrderQuery, updateProfileQuery } from '@/utils/supaQuerys'
+import { createOrderQuery, partnerOrganizationsQuery } from '@/utils/supaQuerys'
 
 usePageStore().pageData.title = '이용상품구매'
 
@@ -38,7 +38,16 @@ const isSubmitting = ref(false)
 const submitError = ref('')
 const submitted = ref(false)
 const discountTier = ref<DiscountTierKey>('new')
-const workplaceName = ref(profile.value?.workplace_name ?? '')
+
+// 단체가입(70%)은 profiles.workplace_name이 관리자가 등록해둔 단체 명단에 있어야만 선택 가능.
+const partnerOrgNames = ref<Set<string>>(new Set())
+onMounted(async () => {
+  const { data } = await partnerOrganizationsQuery
+  partnerOrgNames.value = new Set((data ?? []).map((org) => org.name))
+})
+const isGroupEligible = computed(
+  () => !!profile.value?.workplace_name && partnerOrgNames.value.has(profile.value.workplace_name),
+)
 
 const toggleRoundCount = (count: number) => {
   selectedRoundCount.value = selectedRoundCount.value === count ? null : count
@@ -73,29 +82,14 @@ const canSubmit = computed(
   () =>
     totalAmount.value > 0 &&
     !!depositorName.value.trim() &&
-    (discountTier.value !== 'group' || !!workplaceName.value.trim()),
+    (discountTier.value !== 'group' || isGroupEligible.value),
 )
-
-// 단체가입은 profiles.workplace_name에 저장해두고 관리자가 입금확인 시 함께 확인한다.
-const saveWorkplaceNameIfNeeded = async () => {
-  if (discountTier.value !== 'group' || !profile.value) return true
-  const { error } = await updateProfileQuery(profile.value.id, {
-    workplace_name: workplaceName.value.trim(),
-  })
-  return !error
-}
 
 const submitOrder = async () => {
   if (!profile.value || !canSubmit.value) return
 
   isSubmitting.value = true
   submitError.value = ''
-
-  if (!(await saveWorkplaceNameIfNeeded())) {
-    isSubmitting.value = false
-    submitError.value = '직장명 저장에 실패했습니다. 잠시 후 다시 시도해주세요.'
-    return
-  }
 
   const { error } = await createOrderQuery({
     user_id: profile.value.id,
@@ -124,7 +118,6 @@ const resetForm = () => {
   selectedMaterials.value = []
   depositorName.value = ''
   discountTier.value = 'new'
-  workplaceName.value = ''
 }
 
 const orderName = computed(() => {
@@ -141,20 +134,14 @@ const cardPaySuccess = ref(false)
 
 const payWithCard = async () => {
   if (!profile.value || totalAmount.value <= 0) return
-  if (discountTier.value === 'group' && !workplaceName.value.trim()) {
-    cardPayError.value = '단체가입은 직장명을 입력해주세요.'
+  if (discountTier.value === 'group' && !isGroupEligible.value) {
+    cardPayError.value = '등록된 단체 소속만 단체가입 할인을 이용할 수 있습니다.'
     return
   }
 
   cardPaySubmitting.value = true
   cardPayError.value = ''
   cardPaySuccess.value = false
-
-  if (!(await saveWorkplaceNameIfNeeded())) {
-    cardPaySubmitting.value = false
-    cardPayError.value = '직장명 저장에 실패했습니다. 잠시 후 다시 시도해주세요.'
-    return
-  }
 
   try {
     const response = await PortOne.requestPayment({
@@ -306,19 +293,15 @@ const payWithCard = async () => {
               :key="tier.key"
               :variant="discountTier === tier.key ? 'default' : 'outline'"
               size="sm"
+              :disabled="tier.key === 'group' && !isGroupEligible"
               @click="discountTier = tier.key"
             >
               {{ tier.title }} ({{ Math.round(tier.rate * 100) }}% 할인)
             </Button>
           </div>
-          <div v-if="discountTier === 'group'" class="grid gap-1.5 pt-1">
-            <Label class="text-sm">직장명</Label>
-            <Input
-              v-model="workplaceName"
-              placeholder="소속 단체/직장명을 입력하세요"
-              required
-            />
-          </div>
+          <p v-if="!isGroupEligible" class="text-xs text-muted-foreground">
+            단체가입은 등록된 단체 소속 회원만 이용할 수 있습니다. 프로필에서 직장명을 확인해주세요.
+          </p>
         </div>
 
         <div class="flex items-center justify-between text-sm text-muted-foreground">

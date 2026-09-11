@@ -47,6 +47,12 @@ const staticResults = computed<SearchResult[]>(() => {
         group: '메뉴',
         to: { name: '/admin/inquiries/' },
       },
+      {
+        key: 'page-organizations',
+        title: '단체관리',
+        group: '메뉴',
+        to: { name: '/admin/organizations/' },
+      },
     )
   }
 

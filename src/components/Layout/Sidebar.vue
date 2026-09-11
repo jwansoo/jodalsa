@@ -52,6 +52,7 @@ const adminLinks = computed(() =>
     ? [
         { title: '문의관리', to: '/admin/inquiries', icon: 'lucide:inbox' },
         { title: '입금확인', to: '/admin/orders', icon: 'lucide:receipt' },
+        { title: '단체관리', to: '/admin/organizations', icon: 'lucide:landmark' },
       ]
     : [],
 )

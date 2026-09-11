@@ -104,7 +104,7 @@ const submitEdit = async () => {
           </div>
           <div class="grid gap-2">
             <Label>직장명 (단체가입 시 필요)</Label>
-            <Input v-model="editForm.workplace_name" placeholder="소속 단체/직장명 입력" />
+            <WorkplaceNameField v-model="editForm.workplace_name" />
           </div>
           <ul class="text-sm text-left text-red-500" v-if="editError">
             <li class="list-disc">{{ editError }}</li>

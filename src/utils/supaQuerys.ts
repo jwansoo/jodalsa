@@ -108,6 +108,18 @@ export const confirmOrderQuery = (id: number) =>
     .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })
     .eq('id', id)
 
+export const partnerOrganizationsQuery = supabase
+  .from('partner_organizations')
+  .select('*')
+  .order('name')
+export type PartnerOrganizations = QueryData<typeof partnerOrganizationsQuery>
+
+export const addPartnerOrganizationQuery = (name: string) =>
+  supabase.from('partner_organizations').insert({ name }).select().single()
+
+export const deletePartnerOrganizationQuery = (id: number) =>
+  supabase.from('partner_organizations').delete().eq('id', id)
+
 export const trustedDeviceQuery = (userId: string, deviceId: string) =>
   supabase
     .from('trusted_devices')
