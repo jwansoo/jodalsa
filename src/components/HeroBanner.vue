@@ -177,7 +177,7 @@ const facts = [
 
   position: relative;
   overflow: hidden;
-  padding: 58px 32px 0;
+  padding: 52px 29px 0;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
@@ -197,19 +197,19 @@ const facts = [
 
 .close-btn {
   position: absolute;
-  right: 20px;
-  bottom: 16px;
+  right: 18px;
+  bottom: 14px;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 29px;
+  height: 29px;
   border: 1px solid var(--rule);
   border-radius: 50%;
   background: #fff;
   color: var(--muted);
-  font-size: 16px;
+  font-size: 14px;
   cursor: pointer;
   transition:
     background-color 0.18s ease,
@@ -230,17 +230,17 @@ const facts = [
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
-  gap: 72px;
+  gap: 65px;
   align-items: start;
 }
 
 .headline {
   font-family: var(--serif);
   font-weight: 700;
-  font-size: clamp(24px, 3vw, 38px);
+  font-size: clamp(22px, 2.7vw, 34px);
   line-height: 1.26;
   letter-spacing: -0.022em;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   word-break: keep-all;
 }
 
@@ -251,20 +251,20 @@ const facts = [
 }
 
 .lede {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--ink-soft);
   max-width: 40ch;
-  margin: 0 0 12px;
+  margin: 0 0 11px;
   word-break: keep-all;
 }
 
 .detail {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.65;
   color: var(--muted);
   max-width: 42ch;
-  margin: 0 0 22px;
+  margin: 0 0 20px;
   word-break: keep-all;
 }
 .detail b {
@@ -275,15 +275,15 @@ const facts = [
 .cta {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 11px;
+  margin-bottom: 25px;
 }
 
 .btn {
-  padding: 11px 22px;
+  padding: 10px 20px;
   border-radius: 3px;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition:
@@ -316,12 +316,12 @@ const facts = [
   display: flex;
   list-style: none;
   margin: 0;
-  padding: 16px 0 0;
+  padding: 14px 0 0;
   border-top: 1px solid var(--rule);
 }
 .facts li {
   flex: 1;
-  padding-left: 18px;
+  padding-left: 16px;
   border-left: 1px solid var(--rule);
 }
 .facts li:first-child {
@@ -332,20 +332,20 @@ const facts = [
   display: block;
   font-family: var(--serif);
   font-weight: 700;
-  font-size: 21px;
+  font-size: 19px;
   line-height: 1.1;
   font-feature-settings: 'tnum';
 }
 .facts .k {
   display: block;
-  margin-top: 5px;
-  font-size: 12px;
+  margin-top: 4px;
+  font-size: 11px;
   color: var(--muted);
   word-break: keep-all;
 }
 
 .demo {
-  padding-top: 6px;
+  padding-top: 5px;
 }
 
 .qcard {
@@ -359,10 +359,10 @@ const facts = [
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
-  padding: 11px 20px;
+  gap: 11px;
+  padding: 10px 18px;
   border-bottom: 1px solid var(--rule);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted);
 }
 .qcard__head strong {
@@ -375,12 +375,12 @@ const facts = [
 }
 
 .qcard__body {
-  padding: 17px 20px 15px;
+  padding: 15px 18px 14px;
 }
 
 .stem {
-  margin: 0 0 13px;
-  font-size: 14.5px;
+  margin: 0 0 12px;
+  font-size: 13px;
   line-height: 1.6;
   word-break: keep-all;
 }
@@ -394,11 +394,11 @@ const facts = [
 .choices li {
   counter-increment: c;
   display: flex;
-  gap: 10px;
-  padding: 7px 11px;
+  gap: 9px;
+  padding: 6px 10px;
   border: 1px solid transparent;
   border-radius: 3px;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.4;
   color: var(--ink-soft);
   opacity: 0;
@@ -407,13 +407,13 @@ const facts = [
 .choices li::before {
   content: counter(c);
   flex: none;
-  width: 21px;
-  height: 21px;
+  width: 19px;
+  height: 19px;
   margin-top: 1px;
   border: 1px solid var(--rule);
   border-radius: 50%;
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 11px;
+  line-height: 18px;
   text-align: center;
   color: var(--muted);
   font-feature-settings: 'tnum';
@@ -431,11 +431,11 @@ const facts = [
 }
 
 .verdict {
-  margin-top: 12px;
-  padding: 10px 14px;
+  margin-top: 11px;
+  padding: 9px 13px;
   background: #f7f9fb;
   border-left: 3px solid var(--tier-3);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--ink-soft);
   opacity: 0;
@@ -444,7 +444,7 @@ const facts = [
 }
 .verdict .src {
   display: block;
-  margin-top: 6px;
+  margin-top: 5px;
   color: var(--brass);
   font-weight: 600;
 }
@@ -462,16 +462,16 @@ const facts = [
 
 .rounds {
   display: flex;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 5px;
+  margin-top: 13px;
 }
 .rounds span {
   flex: 1;
-  padding: 6px 0;
+  padding: 5px 0;
   text-align: center;
   background: #fff;
   border: 1px solid var(--rule);
-  font-size: 11.5px;
+  font-size: 10px;
   color: var(--muted);
   font-feature-settings: 'tnum';
 }
@@ -482,31 +482,31 @@ const facts = [
 }
 
 .caption {
-  margin: 10px 0 0;
-  font-size: 11.5px;
+  margin: 9px 0 0;
+  font-size: 10px;
   color: var(--muted);
 }
 
 .books {
   position: relative;
   max-width: 1160px;
-  margin: 48px auto 0;
-  padding: 18px 0 58px;
+  margin: 43px auto 0;
+  padding: 16px 0 52px;
   border-top: 1px solid var(--rule);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  gap: 36px;
 }
 .books h2 {
   grid-column: 1 / -1;
   margin: 0 0 4px;
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 500;
 }
 
 .book {
-  padding-left: 14px;
+  padding-left: 13px;
   border-left: 2px solid var(--tier-2);
 }
 .book[data-tone='b'] {
@@ -517,12 +517,12 @@ const facts = [
 }
 .book h3 {
   margin: 0 0 4px;
-  font-size: 14.5px;
+  font-size: 13px;
   font-weight: 600;
 }
 .book p {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.55;
   color: var(--muted);
   word-break: keep-all;
@@ -530,11 +530,11 @@ const facts = [
 
 @media (max-width: 900px) {
   .hero {
-    padding: 38px 20px 0;
+    padding: 34px 18px 0;
   }
   .hero__inner {
     grid-template-columns: 1fr;
-    gap: 44px;
+    gap: 40px;
   }
   .lede,
   .detail {
@@ -542,7 +542,7 @@ const facts = [
   }
   .facts {
     flex-wrap: wrap;
-    gap: 18px 0;
+    gap: 16px 0;
   }
   .facts li {
     flex: 0 0 50%;
@@ -553,9 +553,9 @@ const facts = [
   }
   .books {
     grid-template-columns: 1fr;
-    gap: 22px;
-    margin-top: 35px;
-    padding-bottom: 38px;
+    gap: 20px;
+    margin-top: 32px;
+    padding-bottom: 34px;
   }
 }
 
