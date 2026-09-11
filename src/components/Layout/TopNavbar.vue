@@ -32,6 +32,7 @@ const staticResults = computed<SearchResult[]>(() => {
 
   const pages: SearchResult[] = [
     { key: 'page-home', title: '홈', group: '메뉴', to: { name: '/' } },
+    { key: 'page-intro', title: '사이트소개', group: '메뉴', to: { name: '/intro' } },
     { key: 'page-tests', title: '모의고사', group: '메뉴', to: { name: '/tests/' } },
     { key: 'page-materials', title: '수험교재', group: '메뉴', to: { name: '/materials/' } },
     { key: 'page-purchase', title: '이용상품구매', group: '메뉴', to: { name: '/purchase/' } },
@@ -115,39 +116,48 @@ const onSearchBlur = () => {
 
 <template>
   <nav class="h-16 border-b bg-muted/40 flex gap-2 justify-between px-6 items-center">
-    <div class="relative h-fit w-full max-w-96" role="search">
-      <iconify-icon
-        class="absolute top-[50%] translate-y-[-50%] left-2.5 text-muted-foreground"
-        icon="lucide:search"
-      ></iconify-icon>
-      <Input
-        v-model="searchQuery"
-        class="w-full pl-8 bg-background"
-        type="text"
-        placeholder="검색 ..."
-        autocomplete="off"
-        @focus="isSearchFocused = true"
-        @blur="onSearchBlur"
-        @keydown.enter.prevent="allResults[0] && goToResult(allResults[0])"
-      />
-
-      <div
-        v-if="isSearchFocused && searchQuery.trim()"
-        class="absolute top-full z-50 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-md"
+    <div class="flex items-center gap-3">
+      <RouterLink
+        :to="{ name: '/intro' }"
+        class="shrink-0 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
-        <ul v-if="allResults.length" class="max-h-80 overflow-y-auto py-1">
-          <li v-for="result in allResults" :key="result.key">
-            <button
-              type="button"
-              class="flex w-full flex-col items-start px-3 py-2 text-left text-sm hover:bg-muted"
-              @mousedown.prevent="goToResult(result)"
-            >
-              <span class="truncate">{{ result.title }}</span>
-              <span class="text-xs text-muted-foreground">{{ result.group }}</span>
-            </button>
-          </li>
-        </ul>
-        <p v-else class="px-3 py-2 text-sm text-muted-foreground">검색 결과가 없습니다.</p>
+        사이트소개
+      </RouterLink>
+
+      <div class="relative h-fit w-full max-w-96" role="search">
+        <iconify-icon
+          class="absolute top-[50%] translate-y-[-50%] left-2.5 text-muted-foreground"
+          icon="lucide:search"
+        ></iconify-icon>
+        <Input
+          v-model="searchQuery"
+          class="w-full pl-8 bg-background"
+          type="text"
+          placeholder="검색 ..."
+          autocomplete="off"
+          @focus="isSearchFocused = true"
+          @blur="onSearchBlur"
+          @keydown.enter.prevent="allResults[0] && goToResult(allResults[0])"
+        />
+
+        <div
+          v-if="isSearchFocused && searchQuery.trim()"
+          class="absolute top-full z-50 mt-1 w-full overflow-hidden rounded-md border bg-popover shadow-md"
+        >
+          <ul v-if="allResults.length" class="max-h-80 overflow-y-auto py-1">
+            <li v-for="result in allResults" :key="result.key">
+              <button
+                type="button"
+                class="flex w-full flex-col items-start px-3 py-2 text-left text-sm hover:bg-muted"
+                @mousedown.prevent="goToResult(result)"
+              >
+                <span class="truncate">{{ result.title }}</span>
+                <span class="text-xs text-muted-foreground">{{ result.group }}</span>
+              </button>
+            </li>
+          </ul>
+          <p v-else class="px-3 py-2 text-sm text-muted-foreground">검색 결과가 없습니다.</p>
+        </div>
       </div>
     </div>
     <div class="flex justify-center items-center gap-1">
