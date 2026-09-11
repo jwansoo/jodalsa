@@ -14,7 +14,7 @@ export interface MaterialOption {
 }
 
 export const materialOptions: MaterialOption[] = [
-  { key: '필기', title: '필기', amount: 50000 },
+  { key: '필기', title: '필기', amount: 50000, disabled: true, note: '오픈예정' },
   {
     key: '핵심규정',
     title: '핵심규정',

@@ -274,7 +274,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
 }
 .si-lead {
   font-size: 18px;
-  color: #3a4152;
+  color: var(--si-ink);
 }
 
 .si-figures {
