@@ -136,9 +136,16 @@ useMeta({
 </script>
 
 <style scoped>
-/* PromoBanner has its own fixed dark background regardless of site theme,
-   so the dialog close button needs a fixed light color to stay visible in light mode. */
+/* PromoBanner sits on a transparent DialogContent, so the close button can land on
+   the dark overlay, the dark promo card, or (depending on theme) neither — give it
+   its own opaque chip so it stays legible no matter what's behind it. */
 :deep(.promo-dialog [data-slot='dialog-close']) {
-  color: #eef1f5;
+  padding: 4px;
+  border-radius: 9999px;
+  background-color: rgba(238, 241, 245, 0.92);
+  color: #101a26;
+}
+:deep(.promo-dialog [data-slot='dialog-close']:hover) {
+  background-color: #eef1f5;
 }
 </style>
