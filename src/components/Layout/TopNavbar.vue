@@ -166,52 +166,58 @@ const onSearchBlur = () => {
         </div>
       </div>
     </div>
-    <div class="flex justify-center items-center gap-1">
-      <div class="w-8 gap-4">
-        <DropdownMenu v-if="profile">
-          <DropdownMenuTrigger>
-            <iconify-icon icon="lucide:user"></iconify-icon>
-            <!-- <Avatar>
-              <AvatarImage
-                :src="profile.avatar_url || 'wansoo.png'"
-                :alt="`${profile.full_name} profile picture`"
-              />
-              <AvatarFallback class="w-16">CN</AvatarFallback>
-            </Avatar> -->
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel class="bg-muted">나의 프로필</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <RouterLink
-                :to="{
-                  name: '/users/[username]',
-                  params: { username: profile.username },
-                }"
-                class="w-full h-full"
-              >
-                프로필
-              </RouterLink>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <RouterLink :to="{ name: '/orders/' }" class="w-full h-full"> 구매내역 </RouterLink>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <RouterLink
-                :to="{
-                  name: '/results/[id]',
-                  params: { id: profile.id },
-                }"
-                class="w-full h-full"
-              >
-                시험결과분석
-              </RouterLink>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+    <div class="flex justify-center items-center gap-2">
+      <DropdownMenu v-if="profile">
+        <DropdownMenuTrigger class="w-8">
+          <iconify-icon icon="lucide:user"></iconify-icon>
+          <!-- <Avatar>
+            <AvatarImage
+              :src="profile.avatar_url || 'wansoo.png'"
+              :alt="`${profile.full_name} profile picture`"
+            />
+            <AvatarFallback class="w-16">CN</AvatarFallback>
+          </Avatar> -->
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel class="bg-muted">나의 프로필</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <RouterLink
+              :to="{
+                name: '/users/[username]',
+                params: { username: profile.username },
+              }"
+              class="w-full h-full"
+            >
+              프로필
+            </RouterLink>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <RouterLink :to="{ name: '/orders/' }" class="w-full h-full"> 구매내역 </RouterLink>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <RouterLink
+              :to="{
+                name: '/results/[id]',
+                params: { id: profile.id },
+              }"
+              class="w-full h-full"
+            >
+              시험결과분석
+            </RouterLink>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <template v-else>
+        <RouterLink :to="{ name: '/login' }">
+          <Button size="sm" variant="outline">로그인</Button>
+        </RouterLink>
+        <RouterLink :to="{ name: '/register' }">
+          <Button size="sm">회원가입</Button>
+        </RouterLink>
+      </template>
       <Button @click="toggleDark()" class="w-8 h-8">
         <Transition name="scale" mode="out-in">
           <iconify-icon v-if="isDark" icon="lucide:sun"></iconify-icon>

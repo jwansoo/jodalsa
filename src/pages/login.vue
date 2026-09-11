@@ -57,7 +57,9 @@ const cancelOtp = () => router.replace({ name: '/login', query: {} })
 </script>
 
 <template>
-  <div class="mx-auto flex w-full justify-center items-center p-10 text-center -mt-20 min-h-[90vh]">
+  <div
+    class="mx-auto flex w-full flex-col justify-center items-center p-10 text-center -mt-20 min-h-[90vh]"
+  >
     <Card class="max-w-sm w-full mx-auto">
       <CardHeader>
         <template v-if="!otpRequired">
@@ -149,5 +151,6 @@ const cancelOtp = () => router.replace({ name: '/login', query: {} })
         </form>
       </CardContent>
     </Card>
+    <BackHomeLink />
   </div>
 </template>

@@ -3,10 +3,10 @@
  * 회원가입 할인 광고 배너
  *
  * 사용:
- *   <PromoBanner :discount-rate="30" @claim="goCheckout" @trial="goFreeRound" />
+ *   <PromoBanner :discount-rate="50" @claim="goCheckout" @trial="goFreeRound" />
  */
 defineProps({
-  discountRate: { type: Number, default: 30 },
+  discountRate: { type: Number, default: 50 },
 })
 
 defineEmits(['claim', 'trial', 'dismiss-today'])
@@ -18,7 +18,7 @@ defineEmits(['claim', 'trial', 'dismiss-today'])
       <span class="kicker">개설 기념 · 회원가입 특별 혜택</span>
 
       <h2 class="promo__title">
-        신규가입하신 분께<br />
+        개설기념으로 신규가입하신 분께<br />
         이용료를 <em>{{ discountRate }}%</em> 할인해 드립니다.
       </h2>
 

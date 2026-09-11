@@ -1,14 +1,5 @@
 <template>
   <div class="flex flex-col gap-10 p-6">
-    <div v-if="!user" class="flex justify-center gap-2">
-      <RouterLink :to="{ name: '/register' }">
-        <Button size="lg">회원가입</Button>
-      </RouterLink>
-      <RouterLink :to="{ name: '/login' }">
-        <Button size="lg" variant="outline">로그인</Button>
-      </RouterLink>
-    </div>
-
     <HeroBanner
       :free-round="21"
       @start-trial="scrollToTrial"
@@ -63,11 +54,25 @@
         </span>
         <h2 class="text-2xl font-bold">모의고사 '무료체험'</h2>
       </div>
-      <p class="mb-4 text-muted-foreground">
-        로그인 없이 모의고사를 체험해 보세요. 로그인하면 결과가 저장되어 나중에도 확인할 수
-        있습니다.
-      </p>
-      <ExamRunner round="21회차" start-collapsed />
+      <template v-if="user">
+        <p class="mb-4 text-muted-foreground">
+          모의고사를 체험해 보세요. 결과가 저장되어 나중에도 확인할 수 있습니다.
+        </p>
+        <ExamRunner round="21회차" start-collapsed />
+      </template>
+      <template v-else>
+        <p class="mb-4 text-muted-foreground">
+          로그인 후 모의고사 무료체험을 이용하실 수 있습니다.
+        </p>
+        <div class="flex gap-2">
+          <RouterLink :to="{ name: '/register' }">
+            <Button>회원가입</Button>
+          </RouterLink>
+          <RouterLink :to="{ name: '/login' }">
+            <Button variant="outline">로그인</Button>
+          </RouterLink>
+        </div>
+      </template>
     </section>
 
     <ChatWidget />
@@ -135,17 +140,20 @@ useMeta({
 })
 </script>
 
-<style scoped>
+<style>
 /* PromoBanner sits on a transparent DialogContent, so the close button can land on
    the dark overlay, the dark promo card, or (depending on theme) neither — give it
-   its own opaque chip so it stays legible no matter what's behind it. */
-:deep(.promo-dialog [data-slot='dialog-close']) {
+   its own opaque chip so it stays legible no matter what's behind it.
+   Global (unscoped) on purpose: DialogContent is teleported through DialogPortal via a
+   plain reka-ui DialogClose, so it never receives this component's scoped data-v-*
+   attribute and a `scoped` + `:deep()` rule here can never match it. */
+.promo-dialog [data-slot='dialog-close'] {
   padding: 4px;
   border-radius: 9999px;
   background-color: rgba(238, 241, 245, 0.92);
   color: #101a26;
 }
-:deep(.promo-dialog [data-slot='dialog-close']:hover) {
+.promo-dialog [data-slot='dialog-close']:hover {
   background-color: #eef1f5;
 }
 </style>
