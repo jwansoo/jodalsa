@@ -226,7 +226,7 @@ const facts = [
 
 .hero__inner {
   position: relative;
-  max-width: 1160px;
+  max-width: 1044px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -489,7 +489,7 @@ const facts = [
 
 .books {
   position: relative;
-  max-width: 1160px;
+  max-width: 1044px;
   margin: 43px auto 0;
   padding: 16px 0 52px;
   border-top: 1px solid var(--rule);
