@@ -49,13 +49,16 @@
         <section id="why" class="si-section">
           <h2>왜 문제풀이인가</h2>
           <p>
-            공공조달 분야는 법률·시행령·시행규칙·계약예규가 촘촘하게 얽혀 있습니다. 개념을 여러 번 읽어도
-            금액 기준 하나, 예외 조항 하나가 바뀐 보기 앞에서는 판단이 흔들리기 쉽습니다. 시험장에서 필요한 것은
-            '알고 있다'는 느낌이 아니라, 네 개의 보기 중 정답을 골라내는 힘입니다.
+            공공조달 법령은 법률·시행령·시행규칙·계약예규가 촘촘히 맞물려 있습니다. 개념을 여러 번 읽어도
+            금액 기준 하나, 예외 조항 하나만 바뀐 보기 앞에서는 판단이 흔들립니다.
+          </p>
+          <p class="si-emph">
+            시험장에서 점수를 만드는 것은 '알고 있다'는 느낌이 아니라, 네 개의 보기 중 정답을 가려내는
+            힘입니다.
           </p>
           <p>
-            그 힘을 기르는 가장 확실한 방법은 충분한 양의 문제를 실전 형식으로 풀고, 틀린 문제의 근거를 그 자리에서
-            확인하는 것입니다. 그래서 이 사이트는 모의고사를 중심에 두고 학습 보조자료를 함께 제공합니다.
+            그 힘은 실전 형식의 문제를 충분히 풀고, 틀린 문제의 근거를 그 자리에서 확인할 때 길러집니다.
+            이 사이트가 모의고사를 중심에 두고 학습 보조자료를 곁에 둔 이유입니다.
           </p>
         </section>
 
@@ -367,6 +370,12 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll))
   width: 52px;
   height: 3px;
   background: var(--si-ink);
+}
+.si-emph {
+  font-weight: 600;
+  /* var(--si-accent) (= --primary) is nearly the same lightness as body ink in both
+     themes here, so it reads as barely-there — use --destructive for real contrast. */
+  color: var(--destructive);
 }
 
 /* 만든 사람 : 연혁형 목록 */
