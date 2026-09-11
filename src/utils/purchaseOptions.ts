@@ -20,7 +20,7 @@ export const materialOptions: MaterialOption[] = [
     title: '핵심규정',
     amount: 20000,
     disabled: true,
-    note: '필기 + 회차 10회 구매 회원에게 무료로 제공됩니다',
+    note: '이용권 10회 이상 구매 회원에게 무료로 제공됩니다',
   },
   { key: '실기', title: '실기', amount: 20000, disabled: true, note: '오픈예정' },
 ]

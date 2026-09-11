@@ -40,10 +40,10 @@ const canAccess = (material: string) =>
         <CourseTree />
       </div>
       <div v-else class="flex flex-col items-start gap-2 rounded-lg border bg-muted/20 p-4 text-sm">
-        <p class="text-muted-foreground">구매 후 이용 가능한 교재입니다.</p>
-        <RouterLink :to="{ name: '/purchase/' }" class="text-primary underline">
+        <p class="text-muted-foreground">준비 중인 교재입니다. 오픈 후 구매하실 수 있습니다.</p>
+        <span class="cursor-not-allowed text-muted-foreground/60 underline">
           이용상품구매 바로가기
-        </RouterLink>
+        </span>
       </div>
     </section>
 
@@ -59,7 +59,7 @@ const canAccess = (material: string) =>
         <FlatMaterialList :items="coreRegulationList" />
       </div>
       <div v-else class="flex flex-col items-start gap-2 rounded-lg border bg-muted/20 p-4 text-sm">
-        <p class="text-muted-foreground">구매 후 이용 가능한 교재입니다.</p>
+        <p class="text-muted-foreground">이용권 10회 이상 구매 시 무료로 이용 가능합니다.</p>
         <RouterLink :to="{ name: '/purchase/' }" class="text-primary underline">
           이용상품구매 바로가기
         </RouterLink>
@@ -78,10 +78,10 @@ const canAccess = (material: string) =>
         <FlatMaterialList :items="practicalMaterialList" />
       </div>
       <div v-else class="flex flex-col items-start gap-2 rounded-lg border bg-muted/20 p-4 text-sm">
-        <p class="text-muted-foreground">구매 후 이용 가능한 교재입니다.</p>
-        <RouterLink :to="{ name: '/purchase/' }" class="text-primary underline">
+        <p class="text-muted-foreground">준비 중인 교재입니다. 오픈 후 구매하실 수 있습니다.</p>
+        <span class="cursor-not-allowed text-muted-foreground/60 underline">
           이용상품구매 바로가기
-        </RouterLink>
+        </span>
       </div>
     </section>
   </div>
