@@ -38,7 +38,7 @@ const isSubmitting = ref(false)
 const submitError = ref('')
 const submitted = ref(false)
 const discountTier = ref<DiscountTierKey>('new')
-const workplaceName = ref('')
+const workplaceName = ref(profile.value?.workplace_name ?? '')
 
 const toggleRoundCount = (count: number) => {
   selectedRoundCount.value = selectedRoundCount.value === count ? null : count
