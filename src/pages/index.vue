@@ -1,11 +1,5 @@
 <template>
   <div class="flex flex-col gap-10 p-6">
-    <HeroBanner
-      :free-round="21"
-      @start-trial="scrollToTrial"
-      @preview-book="router.push('/materials')"
-    />
-
     <div v-if="!user" class="flex justify-center gap-2">
       <RouterLink :to="{ name: '/register' }">
         <Button size="lg">회원가입</Button>
@@ -14,6 +8,12 @@
         <Button size="lg" variant="outline">로그인</Button>
       </RouterLink>
     </div>
+
+    <HeroBanner
+      :free-round="21"
+      @start-trial="scrollToTrial"
+      @preview-book="router.push('/materials')"
+    />
 
     <section class="grid gap-4 sm:grid-cols-2">
       <RouterLink
