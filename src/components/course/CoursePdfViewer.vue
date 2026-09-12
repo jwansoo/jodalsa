@@ -12,6 +12,21 @@ const pageCount = ref(0)
 const scale = ref(1.4)
 const isLoading = ref(false)
 
+const viewerRoot = ref<HTMLDivElement | null>(null)
+const isFullscreen = ref(false)
+
+const toggleFullscreen = () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen()
+  } else {
+    viewerRoot.value?.requestFullscreen()
+  }
+}
+
+const onFullscreenChange = () => {
+  isFullscreen.value = !!document.fullscreenElement
+}
+
 let loadingTask: PDFDocumentLoadingTask | null = null
 let pdfDoc: PDFDocumentProxy | null = null
 let renderTasks: (RenderTask | null)[] = []
@@ -95,7 +110,11 @@ watch(
   { immediate: true },
 )
 
-onUnmounted(destroyDoc)
+onMounted(() => document.addEventListener('fullscreenchange', onFullscreenChange))
+onUnmounted(() => {
+  destroyDoc()
+  document.removeEventListener('fullscreenchange', onFullscreenChange)
+})
 
 const zoomOut = () => {
   scale.value = Math.max(scale.value - 0.2, 0.6)
@@ -108,7 +127,7 @@ const zoomIn = () => {
 </script>
 
 <template>
-  <div class="flex h-full flex-col gap-2">
+  <div ref="viewerRoot" class="bg-background flex h-full flex-col gap-2">
     <div class="flex items-center justify-center gap-2 border-b pb-2">
       <span class="text-muted-foreground text-sm">전체 {{ pageCount || '-' }}쪽</span>
       <span class="mx-2 h-5 w-px bg-border" />
@@ -117,6 +136,10 @@ const zoomIn = () => {
       </Button>
       <Button variant="outline" size="icon" @click="zoomIn">
         <iconify-icon icon="lucide:zoom-in" />
+      </Button>
+      <span class="mx-2 h-5 w-px bg-border" />
+      <Button variant="outline" size="icon" @click="toggleFullscreen">
+        <iconify-icon :icon="isFullscreen ? 'lucide:minimize' : 'lucide:maximize'" />
       </Button>
     </div>
     <div
@@ -135,4 +158,8 @@ const zoomIn = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+div:fullscreen {
+  padding: 1rem;
+}
+</style>

@@ -1,5 +1,29 @@
 <template>
   <article class="site-intro">
+    <section
+      class="mx-auto mb-12 max-w-3xl rounded-xl border border-primary/30 bg-linear-to-br from-primary/15 via-primary/5 to-transparent p-6 text-left shadow-sm"
+    >
+      <h3 class="mb-3 text-center font-semibold text-foreground">보이지 않는 곳까지 공들였습니다</h3>
+      <p class="mb-3 font-medium text-foreground">
+        학습 사이트의 완성도는 화면에 보이는 것만으로 결정되지 않습니다. 저희는 화면 구성에
+        <span class="text-primary">Vue.js와 TypeScript</span>를, 데이터 관리에
+        <span class="text-primary">Supabase</span>를, 서비스 운영에
+        <span class="text-primary">Netlify</span>를, 메일 발송에
+        <span class="text-primary">Resend</span>를 사용합니다. 모두 각 분야에서 세계적으로
+        인정받은 솔루션이며, 항상 최신 버전을 유지합니다.
+      </p>
+      <p class="mb-3 font-medium text-foreground">
+        <span class="text-primary">TypeScript</span>는 오류가 사용자 화면에 도달하기 전에
+        걸러냅니다. <span class="text-primary">Supabase</span>는 행 단위 접근 제어로 회원님의
+        학습 기록에 오직 본인만 접근할 수 있도록 합니다. 메일은 검증된 발송 인프라를 통해
+        스팸함으로 새지 않고 정확히 도착합니다.
+      </p>
+      <p class="font-medium text-foreground">
+        기술을 자랑하기 위해서가 아니라, 시험을 준비하시는 분이 시험에만 집중하시도록 하기 위한
+        선택입니다.
+      </p>
+    </section>
+
     <!-- 머리말 -->
     <header class="si-head">
       <p class="si-page-name">사이트 소개</p>

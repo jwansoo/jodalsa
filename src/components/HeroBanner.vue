@@ -23,9 +23,29 @@ const props = defineProps({
   totalRounds: { type: Number, default: 10 },
 })
 
-defineEmits(['start-trial', 'preview-book'])
+const emit = defineEmits(['start-trial', 'preview-book', 'close'])
 
-const visible = ref(true)
+const HERO_DISMISS_KEY = 'hero-banner-dismiss-date'
+
+const isDismissedToday = () => {
+  try {
+    return localStorage.getItem(HERO_DISMISS_KEY) === new Date().toDateString()
+  } catch {
+    return false
+  }
+}
+
+const visible = ref(!isDismissedToday())
+
+const close = () => {
+  visible.value = false
+  try {
+    localStorage.setItem(HERO_DISMISS_KEY, new Date().toDateString())
+  } catch {
+    // localStorage unavailable (private browsing etc.) — just close for this visit
+  }
+  emit('close')
+}
 
 const defaultSample = {
   round: 3,
@@ -78,7 +98,7 @@ const facts = [
 
 <template>
   <section v-if="visible" class="hero">
-    <button type="button" class="close-btn" aria-label="배너 닫기" @click="visible = false">
+    <button type="button" class="close-btn" aria-label="배너 닫기" @click="close">
       <iconify-icon icon="lucide:x" />
     </button>
 

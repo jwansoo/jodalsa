@@ -4,7 +4,23 @@
       :free-round="21"
       @start-trial="scrollToTrial"
       @preview-book="router.push('/materials')"
+      @close="heroDismissed = true"
     />
+
+    <section
+      v-if="heroDismissed"
+      class="mx-auto max-w-3xl rounded-xl border border-primary/30 bg-linear-to-br from-primary/15 via-primary/5 to-transparent p-6 text-center shadow-sm"
+    >
+      <p class="font-semibold text-foreground">
+        세계적으로 검증된 기술(<span class="text-primary">Vue.js, TypeScript, Supabase, Netlify, Resend</span>)을
+        최신 버전으로 적용하여
+      </p>
+      <p class="mt-2 font-semibold text-foreground">
+        <span class="text-primary">안정적인 오류 처리</span>와
+        <span class="text-primary">엄격한 개인정보 보호</span> 위에서, 학습에만 집중하실 수 있는
+        환경을 만들었습니다.
+      </p>
+    </section>
 
     <section class="grid gap-4 sm:grid-cols-2">
       <RouterLink
@@ -77,7 +93,11 @@
         class="promo-dialog max-w-3xl overflow-hidden border-0 bg-transparent p-0 shadow-none"
       >
         <DialogTitle class="sr-only">회원가입 할인 안내</DialogTitle>
-        <PromoBanner @claim="onPromoClaim" @trial="onPromoTrial" @dismiss-today="onPromoDismissToday" />
+        <PromoBanner
+          @claim="onPromoClaim"
+          @trial="onPromoTrial"
+          @dismiss-today="onPromoDismissToday"
+        />
       </DialogContent>
     </Dialog>
   </div>
@@ -92,6 +112,18 @@ const { user } = storeToRefs(useAuthStore())
 const scrollToTrial = () => {
   document.getElementById('trial')?.scrollIntoView({ behavior: 'smooth' })
 }
+
+const HERO_DISMISS_KEY = 'hero-banner-dismiss-date'
+
+const isHeroDismissedToday = () => {
+  try {
+    return localStorage.getItem(HERO_DISMISS_KEY) === new Date().toDateString()
+  } catch {
+    return false
+  }
+}
+
+const heroDismissed = ref(isHeroDismissedToday())
 
 const PROMO_DISMISS_KEY = 'promo-banner-dismiss-date'
 
