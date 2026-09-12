@@ -556,13 +556,14 @@ const facts = [
 .install-note {
   max-width: 1044px;
   margin: 0 auto 52px;
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--seal);
   text-align: center;
 }
 .install-note a {
-  color: var(--tier-2);
-  font-weight: 600;
+  color: var(--seal);
+  font-weight: 700;
   text-decoration: underline;
 }
 
