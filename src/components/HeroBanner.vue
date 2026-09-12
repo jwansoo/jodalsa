@@ -177,6 +177,11 @@ const facts = [
         <p>{{ b.desc }}</p>
       </div>
     </div>
+
+    <p class="install-note">
+      앱설치를 원하시면 <RouterLink :to="{ name: '/manual' }">사용설명서</RouterLink>를 참고하시기
+      바랍니다.
+    </p>
   </section>
 </template>
 
@@ -511,7 +516,7 @@ const facts = [
   position: relative;
   max-width: 1044px;
   margin: 43px auto 0;
-  padding: 16px 0 52px;
+  padding: 16px 0 24px;
   border-top: 1px solid var(--rule);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -548,6 +553,19 @@ const facts = [
   word-break: keep-all;
 }
 
+.install-note {
+  max-width: 1044px;
+  margin: 0 auto 52px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+.install-note a {
+  color: var(--tier-2);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 @media (max-width: 900px) {
   .hero {
     padding: 34px 18px 0;
@@ -575,7 +593,10 @@ const facts = [
     grid-template-columns: 1fr;
     gap: 20px;
     margin-top: 32px;
-    padding-bottom: 34px;
+    padding-bottom: 20px;
+  }
+  .install-note {
+    margin-bottom: 34px;
   }
 }
 
