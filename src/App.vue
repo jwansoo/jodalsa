@@ -38,6 +38,25 @@ const { user } = storeToRefs(useAuthStore())
 const route = useRoute()
 const showAuthLayout = computed(() => !!user.value || route.path === '/')
 
+// 관리자용(/admin/*)과 일반 이용자용을 서로 다른 이름/아이콘으로 각각 홈 화면에 설치할 수 있도록,
+// 현재 보고 있는 화면에 맞춰 PWA manifest를 바꿔 낍니다 — 관리자 화면에서 설치하면
+// "조달컨설팅 관리자"(vite-plugin-pwa가 생성한 manifest.webmanifest, 시작화면 /admin/orders)가,
+// 그 외 화면에서 설치하면 "공공조달관리사"(manifest-user.webmanifest, 시작화면 /)이 설치됩니다.
+watch(
+  () => route.path,
+  (path) => {
+    const href = path.startsWith('/admin') ? '/manifest.webmanifest' : '/manifest-user.webmanifest'
+    let link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')
+    if (!link) {
+      link = document.createElement('link')
+      link.rel = 'manifest'
+      document.head.appendChild(link)
+    }
+    if (link.getAttribute('href') !== href) link.setAttribute('href', href)
+  },
+  { immediate: true },
+)
+
 const AuthLayout = defineAsyncComponent(() => import('./components/Layout/main/AuthLayout.vue'))
 const GuestLayout = defineAsyncComponent(() => import('./components/Layout/main/GuestLayout.vue'))
 

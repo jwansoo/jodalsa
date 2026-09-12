@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "공공조달관리사",
+  "short_name": "공공조달관리사",
+  "description": "공공조달관리사 자격시험 준비 — 모의고사, 수험교재, 시험결과분석",
+  "lang": "ko",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1e2a4a",
+  "theme_color": "#1e2a4a",
+  "icons": [
+    { "src": "/pwa-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/pwa-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
